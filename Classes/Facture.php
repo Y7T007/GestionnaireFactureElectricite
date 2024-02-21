@@ -61,4 +61,20 @@ class Facture
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$paymentDate, $this->FactureID]);
     }
+
+    public function getAnnualFacture($compteurID, $year)
+    {
+        $sql = "SELECT SUM(`Consomation`) as annualFacture FROM `Facture` WHERE `CompteurID` = ? AND YEAR(`DateFacture`) = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID, $year]);
+        return $stmt->fetch()['annualFacture'];
+    }
+
+    public function getAvailableFactureToPay($compteurID)
+    {
+        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID]);
+        return $stmt->fetchAll();
+    }
 }

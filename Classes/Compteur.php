@@ -3,6 +3,7 @@
 namespace Classes;
 
 use Classes\DB_Connection;
+require_once 'vendor/autoload.php';
 
 class Compteur
 {
@@ -37,6 +38,7 @@ class Compteur
         $stmt->execute([$compteurID]);
         return $stmt->fetch();
     }
+
 
     public function getAllCompteurs()
     {

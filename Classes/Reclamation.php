@@ -108,4 +108,12 @@ class Reclamation
         // This is a placeholder. You'll need to implement this based on how you want to send notifications.
         // For example, you might want to send an email, in which case you'd use the PHP mail() function.
     }
+
+    public function getPendingReclamations($compteurID)
+    {
+        $sql = "SELECT COUNT(*) as pendingReclamations FROM `Reclamation` WHERE `CompteurID` = ? AND `Statut` = 'Pending'";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID]);
+        return $stmt->fetch()['pendingReclamations'];
+    }
 }

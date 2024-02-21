@@ -5,6 +5,27 @@ if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
     exit;
 }
+
+require_once 'Classes/Compteur.php';
+require_once 'Classes/Facture.php';
+require_once 'Classes/Reclamation.php';
+
+use Classes\Compteur;
+use Classes\Facture;
+use Classes\Reclamation;
+
+$compteur = new Compteur(null, null, null, null);
+$userData = $compteur->getCompteur($_SESSION['compteurID']);
+
+$facture = new Facture(null,null, null, null, null, null, null, null, null);
+$annualFacture=0;
+
+$annualFacture = $facture->getAnnualFacture($_SESSION['compteurID'], date('Y'))??0;
+$availableFactureToPay = $facture->getAvailableFactureToPay($_SESSION['compteurID']);
+
+$reclamation = new Reclamation(null, null, null, null, null, null, null);
+$pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurID']);
+
 ?>
 
 <!DOCTYPE html>
@@ -129,7 +150,7 @@ if (!isset($_SESSION['loggedin'])) {
                         </li>
                         <div class="d-none d-sm-block topbar-divider"></div>
                         <li class="nav-item dropdown no-arrow">
-                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><?php echo $userData['ClientName']; ?></a>
                                 <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
                                     <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                                 </div>
@@ -143,13 +164,14 @@ if (!isset($_SESSION['loggedin'])) {
                     <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" href="add-consumption.html"><i class="fas fa-plus text-white-50 fa-sm" style="font-size: 13px;"></i> Add this month&#39;s consumption </a>
                 </div>
                 <div class="row">
+
                     <div class="col-md-6 col-xl-3 mb-4">
                         <div class="card shadow border-start-primary py-2">
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
                                     <div class="col me-2">
-                                        <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>actual facture</span></div>
-                                        <div class="text-dark fw-bold h5 mb-0"><span>$40,000</span></div>
+                                        <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>actual consomation</span></div>
+                                        <div class="text-dark fw-bold h5 mb-0"><span><?php echo($availableFactureToPay[0]['Consomation']??0); ?>kW</span></div>
                                     </div>
                                     <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300"></i></div>
                                 </div>
@@ -162,31 +184,9 @@ if (!isset($_SESSION['loggedin'])) {
                                 <div class="row align-items-center no-gutters">
                                     <div class="col me-2">
                                         <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>annual Facturation</span></div>
-                                        <div class="text-dark fw-bold h5 mb-0"><span>$215,000</span></div>
+                                        <div class="text-dark fw-bold h5 mb-0"><span><?php echo $annualFacture; ?></span></div>
                                     </div>
                                     <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-3 mb-4">
-                        <div class="card shadow border-start-info py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col me-2">
-                                        <div class="text-uppercase text-info fw-bold text-xs mb-1"><span>Tasks</span></div>
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-auto">
-                                                <div class="text-dark fw-bold h5 mb-0 me-3"><span>50%</span></div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm">
-                                                    <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"><span class="visually-hidden">50%</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +197,7 @@ if (!isset($_SESSION['loggedin'])) {
                                 <div class="row align-items-center no-gutters">
                                     <div class="col me-2">
                                         <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>Pending reclamations</span></div>
-                                        <div class="text-dark fw-bold h5 mb-0"><span>18</span></div>
+                                        <div class="text-dark fw-bold h5 mb-0"><span><?php echo $pendingReclamations?></span></div>
                                     </div>
                                     <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i></div>
                                 </div>
@@ -217,8 +217,45 @@ if (!isset($_SESSION['loggedin'])) {
                                     </div>
                                 </div>
                             </div>
+                            <?php
+                                $facture = new Facture(null,null, null, null, null, null, null, null, null);
+                                $allFactures = $facture->getAllFactures();
+                                $userFactures = array_filter($allFactures, function($facture) {
+                                    return $facture['CompteurID'] == $_SESSION['compteurID'];
+                                });
+                                
+                                $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                $data = array_fill(0, 12, 0); // Initialize array with 0s
+                                
+                                foreach ($userFactures as $facture) {
+                                    $month = date('m', strtotime($facture['DateFacture'])) - 1; // Get the month of the facture (0-indexed)
+                                    $data[$month] += $facture['Consomation']; // Add the facture amount to the corresponding month
+                                }
+                                
+                                $chartData = [
+                                    'type' => 'line',
+                                    'data' => [
+                                        'labels' => $months,
+                                        'datasets' => [
+                                            [
+                                                'label' => 'Consomation (kWh)',
+                                                'fill' => true,
+                                                'data' => $data,
+                                                'backgroundColor' => 'rgba(78, 115, 223, 0.05)',
+                                                'borderColor' => 'rgba(78, 115, 223, 1)'
+                                            ]
+                                        ]
+                                    ],
+                                    // ... rest of the options
+                                ];
+                                
+                                $chartDataJson = json_encode($chartData);
+                                ?>
                             <div class="card-body">
-                                <div class="chart-area"><canvas data-bss-chart="{&quot;type&quot;:&quot;line&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Earnings&quot;,&quot;fill&quot;:true,&quot;data&quot;:[&quot;0&quot;,&quot;10000&quot;,&quot;5000&quot;,&quot;15000&quot;,&quot;10000&quot;,&quot;20000&quot;,&quot;15000&quot;,&quot;25000&quot;],&quot;backgroundColor&quot;:&quot;rgba(78, 115, 223, 0.05)&quot;,&quot;borderColor&quot;:&quot;rgba(78, 115, 223, 1)&quot;}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;],&quot;drawOnChartArea&quot;:false},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;fontStyle&quot;:&quot;normal&quot;,&quot;padding&quot;:20}}],&quot;yAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;]},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;fontStyle&quot;:&quot;normal&quot;,&quot;padding&quot;:20}}]}}}"></canvas></div>
+                                <div class="chart-area">
+                                    <canvas data-bss-chart='<?php echo $chartDataJson; ?>'></canvas>
+                                    <br>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -233,9 +270,60 @@ if (!isset($_SESSION['loggedin'])) {
                                     </div>
                                 </div>
                             </div>
+                            <?php
+                            // Step 1: Fetch all factures for the current logged in user
+                            $facture = new Facture(null,null, null, null, null, null, null, null, null);
+                            $allFactures = $facture->getAllFactures();
+                            $userFactures = array_filter($allFactures, function($facture) {
+                                return $facture['CompteurID'] == $_SESSION['compteurID'];
+                            });
+
+                            // Step 2: Prepare the data for the chart
+                            $data = [0, 0, 0]; // Initialize array with 0s
+
+                            foreach ($userFactures as $facture) {
+                                if ($facture['Consomation'] <= 100) {
+                                    $data[0] += $facture['Consomation'];
+                                } elseif ($facture['Consomation'] <= 200) {
+                                    $data[1] += $facture['Consomation'] - 100;
+                                    $data[0] = 100;
+                                } else {
+                                    $data[2] += $facture['Consomation'] - 200;
+                                    $data[1] = 100;
+                                    $data[0] = 100;
+                                }
+                            }
+
+                            // Step 3: Insert the data into the chart
+                            $chartData = [
+                                'type' => 'doughnut',
+                                'data' => [
+//                                    'labels' => ['0-100 kwh', '101-200 kwh', '+200 kwh'],
+                                    'datasets' => [
+                                        [
+                                            'label' => '',
+                                            'backgroundColor' => ['#4e73df', '#1cc88a', '#36b9cc'],
+                                            'borderColor' => ['#ffffff', '#ffffff', '#ffffff'],
+                                            'data' => $data
+                                        ]
+                                    ]
+                                ],
+                                // ... rest of the options
+                            ];
+
+                            $chartDataJson = json_encode($chartData);
+                            ?>
+
                             <div class="card-body">
-                                <div class="chart-area"><canvas data-bss-chart="{&quot;type&quot;:&quot;doughnut&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Direct&quot;,&quot;Social&quot;,&quot;Referral&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#1cc88a&quot;,&quot;#36b9cc&quot;],&quot;borderColor&quot;:[&quot;#ffffff&quot;,&quot;#ffffff&quot;,&quot;#ffffff&quot;],&quot;data&quot;:[&quot;50&quot;,&quot;30&quot;,&quot;15&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}}"></canvas></div>
-                                <div class="text-center small mt-4"><span class="me-2"><i class="fas fa-circle text-primary"></i>&nbsp; 0-100 kwh</span><span class="me-2"><i class="fas fa-circle text-success"></i>&nbsp;101-200 kwh</span><span class="me-2"><i class="fas fa-circle text-info"></i>&nbsp;+200 kwh</span></div>
+                                <div class="chart-area">
+                                    <canvas data-bss-chart='<?php echo $chartDataJson; ?>'></canvas>
+                                </div>
+                                <br><br>
+                                <div class="text-center small mt-4">
+                                    <span class="me-2"><i class="fas fa-circle text-primary"></i>&nbsp; 0-100 kwh</span>
+                                    <span class="me-2"><i class="fas fa-circle text-success"></i>&nbsp;101-200 kwh</span>
+                                    <span class="me-2"><i class="fas fa-circle text-info"></i>&nbsp;+200 kwh</span>
+                                </div>
                             </div>
                         </div>
                     </div>
