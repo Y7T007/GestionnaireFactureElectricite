@@ -13,8 +13,6 @@ class Reclamation
     public $Statut;
     public $DateCreation;
     public $Reponse_reclamation;
-
-//    Constructor
     private $pdo;
 
     public function __construct($ReclamationID, $CompteurID, $Type_reclamation, $DateReclamation, $Content_reclamation, $Statut, $DateCreation)

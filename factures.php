@@ -1,3 +1,13 @@
+<?php
+require_once 'Classes/Facture.php';
+use Classes\Facture;
+
+session_start();
+
+// Fetch the factures for the current logged in user
+$facture = new Facture(null, $_SESSION['compteurID'], null, null, null, null, null, null, null);
+$userFactures = $facture->getAllFactures();
+?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -152,37 +162,58 @@
                             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                                 <table class="table my-0" id="dataTable">
                                     <thead>
-                                        <tr>
-                                            <th>N. Facture</th>
-                                            <th>Month</th>
-                                            <th>Usage</th>
-                                            <th>Tranche</th>
-                                            <th>Date Facture</th>
-                                            <th>Billing</th>
-                                            <th>Status</th>
-                                        </tr>
+                                    <tr>
+                                        <th>N. Facture</th>
+                                        <th>Month</th>
+                                        <th>Usage</th>
+                                        <th>Tranche</th>
+                                        <th>Date Limite</th>
+                                        <th>Billing HT</th>
+                                        <th>Billing TTC</th>
+                                        <th>Status</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
+                                    <?php foreach ($userFactures as $facture): ?>
                                         <tr>
-                                            <td>000012</td>
-                                            <td>February 2024</td>
-                                            <td>156kW</td>
-                                            <td>1-2</td>
-                                            <td>03/02/2024</td>
-                                            <td>295.25 dhs</td>
-                                            <td style="color: var(--bs-card-cap-bg);background: rgba(0,126,35,0.91);font-weight: bold;text-align: center;border-radius: 15px;margin: 0;">Payée</td>
+                                            <td><?php echo $facture['FactureID']; ?></td>
+                                            <td><?php echo date('M Y', strtotime($facture['DateFacture'])); ?></td>
+                                            <td><?php echo $facture['Consomation']; ?></td>
+                                            <td>
+                                                <?php
+                                                if ($facture['Consomation'] <= 100) {
+                                                    echo '0kw-100kw';
+                                                    $billing = $facture['Consomation'] * 0.8;
+                                                } elseif ($facture['Consomation'] <= 200) {
+                                                    echo '101kw-200kw';
+                                                    $billing = $facture['Consomation'] * 0.9;
+                                                } else {
+                                                    echo '+201kw';
+                                                    $billing = $facture['Consomation'] * 1;
+                                                }
+                                                ?>
+                                            </td>
+                                            <td><?php echo date('d-m-Y', strtotime($facture['DateLimite'])); ?></td>
+                                            <td><?php echo number_format($billing, 2); ?> dhs</td>
+                                            <td><?php echo number_format(($billing*(1.14)), 2); ?> dhs</td>
+<!--                                            <td>--><?php //echo $facture['Statut']; ?><!--</td>-->
+                                            <td>
+                                                <?php
+                                                if ($facture['Statut'] === 'Unpaid') {
+                                                    if (new DateTime() > new DateTime($facture['DateLimite'])) {
+                                                        echo '<button class="btn btn-danger">Unpaid</button>';
+                                                    } else {
+                                                        echo '<button class="btn btn-warning">Pay Now</button>';
+                                                    }
+                                                } else {
+                                                    echo '<button class="btn btn-success" disabled>Paid</button>';
+                                                }
+                                                ?>
+                                            </td>
                                         </tr>
+                                    <?php endforeach; ?>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Name</strong></td>
-                                            <td><strong>Position</strong></td>
-                                            <td><strong>Office</strong></td>
-                                            <td><strong>Age</strong></td>
-                                            <td><strong>Start date</strong></td>
-                                            <td><strong>Salary</strong></td>
-                                        </tr>
-                                    </tfoot>
+
                                 </table>
                             </div>
                             <div class="row">

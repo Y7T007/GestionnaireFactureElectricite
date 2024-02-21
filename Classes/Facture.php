@@ -1,8 +1,8 @@
 <?php
 
 namespace Classes;
+require_once 'vendor/autoload.php';
 
-use Classes\DB_Connection;
 
 class Facture
 {
