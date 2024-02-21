@@ -2,9 +2,10 @@
 
 namespace Classes;
 
+use Classes\DB_Connection;
+
 class Facture
 {
-
     public $FactureID;
     public $CompteurID;
     public $DateFacture;
@@ -15,7 +16,8 @@ class Facture
     public $DateCreation;
     public $CreatedBy;
 
-//    Constructor
+    private $pdo;
+
     public function __construct($FactureID, $CompteurID, $DateFacture, $Consomation, $DateLimite, $Statut, $DatePaiement, $DateCreation, $CreatedBy)
     {
         $this->FactureID = $FactureID;
@@ -27,102 +29,36 @@ class Facture
         $this->DatePaiement = $DatePaiement;
         $this->DateCreation = $DateCreation;
         $this->CreatedBy = $CreatedBy;
-    }
-
-    public function getFactureID()
-    {
-        return $this->FactureID;
-    }
-
-    public function getCompteurID()
-    {
-        return $this->CompteurID;
-    }
-
-    public function getDateFacture()
-    {
-        return $this->DateFacture;
-    }
-
-    public function getConsomation()
-    {
-        return $this->Consomation;
-    }
-
-    public function getDateLimite()
-    {
-        return $this->DateLimite;
-    }
-
-    public function getStatut()
-    {
-        return $this->Statut;
-    }
-
-    public function getDatePaiement()
-    {
-        return $this->DatePaiement;
-    }
-
-    public function getDateCreation()
-    {
-        return $this->DateCreation;
-    }
-
-    public function getCreatedBy()
-    {
-        return $this->CreatedBy;
-    }
-
-    public function setFactureID($FactureID)
-    {
-        $this->FactureID = $FactureID;
-    }
-
-    public function setCompteurID($CompteurID)
-    {
-        $this->CompteurID = $CompteurID;
-    }
-
-    public function setDateFacture($DateFacture)
-    {
-        $this->DateFacture = $DateFacture;
-    }
-
-    public function setConsomation($Consomation)
-    {
-        $this->Consomation = $Consomation;
-    }
-
-    public function setDateLimite($DateLimite)
-    {
-        $this->DateLimite = $DateLimite;
-    }
-
-    public function setStatut ($Statut)
-    {
-        $this->Statut = $Statut;
+        $DB_connection = new DB_connection();
+        $this->pdo = $DB_connection->getPDO();
     }
 
     public function addFacture()
     {
-        // Implementation to add the current Facture instance to the database
+        $sql = "INSERT INTO `Facture` (`CompteurID`, `DateFacture`, `Consomation`, `DateLimite`, `Statut`, `DatePaiement`, `DateCreation`, `CreatedBy`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$this->CompteurID, $this->DateFacture, $this->Consomation, $this->DateLimite, $this->Statut, $this->DatePaiement, $this->DateCreation, $this->CreatedBy]);
     }
 
     public function getFacture($factureID)
     {
-        // Implementation to get a specific Facture from the database
+        $sql = "SELECT * FROM `Facture` WHERE `FactureID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$factureID]);
+        return $stmt->fetch();
     }
 
-    public static function getAllFactures()
+    public function getAllFactures()
     {
-        // Implementation to get all Factures from the database
+        $sql = "SELECT * FROM `Facture`";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
     }
 
     public function payFacture($paymentDate)
     {
-        // Implementation to mark the Facture as paid and set the payment date
+        $sql = "UPDATE `Facture` SET `DatePaiement` = ?, `Statut` = 'Paid' WHERE `FactureID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$paymentDate, $this->FactureID]);
     }
-
-
 }

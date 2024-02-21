@@ -1,32 +1,61 @@
 <?php
 
 namespace Classes;
-use MongoDB\Client;
-use MongoDB\Driver\ServerApi;
-use MongoDB\Driver\Exception\Exception;
 
-class DB_connection
+use Dotenv\Dotenv;
+use PDO;
+use PDOException;
+require '../vendor/autoload.php';
+
+
+class DB_Connection
 {
-    private $uri;
-    private $client;
+    private $pdo;
 
     public function __construct()
-    {
-        $this->uri = 'mongodb+srv://yassir7t:C3mN2e9R6jL%25bsX@users.lhhhvmb.mongodb.net/?retryWrites=true&w=majority';
-        $apiVersion = new ServerApi(ServerApi::V1);
-        $this->client = new Client($this->uri, [], ['serverApi' => $apiVersion]);
+    { 
+
+        $dotenv = Dotenv::createImmutable(__DIR__);
+
+        if (file_exists(__DIR__.'/.env') && is_readable(__DIR__.'/.env')) {
+            $dotenv->load();
+        } else {
+            die('Could not load .env file');
+        }
+
+        $connectionString = $_ENV['JAWSDB_URL'] ;
+
+        $url = parse_url($connectionString);
+
+        $dsn = "mysql:host={$url['host']};port={$url['port']};dbname=" . substr($url['path'], 1);
+
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+
+        try {
+            $this->pdo = new PDO($dsn, $url['user'], $url['pass'], $options);
+        } catch (PDOException $e) {
+            // Handle the exception appropriately (log, show error page, etc.)
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
+        }
     }
 
-    public function getClient()
+    public function getPDO()
+    {
+        return $this->pdo;
+    }
+
+    public function getTables()
     {
         try {
-            // Send a ping to confirm a successful connection
-            $this->client->selectDatabase('admin')->command(['ping' => 1]);
-            echo "Pinged your deployment. You successfully connected to MongoDB!\n";
-            return $this->client;
-        } catch (Exception $e) {
-            printf($e->getMessage());
-            return null;
+            $stmt = $this->pdo->query('SHOW TABLES');
+            return $stmt->fetchAll(PDO::FETCH_NUM);
+        } catch (PDOException $e) {
+            // Handle the exception appropriately (log, show error page, etc.)
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
         }
     }
 }

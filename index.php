@@ -8,33 +8,55 @@
     <title>Document</title>
 </head>
 <body>
+
+<?php
+
+use Classes\DB_Connection;
+use Classes\Reclamation;
+
+require 'vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+
+if (file_exists(__DIR__.'/.env') && is_readable(__DIR__.'/.env')) {
+    $dotenv->load();
+} else {
+    die('Could not load .env file');
+}
+
+$CONN_STRING = $_ENV['JAWSDB_URL'] ;
+
+$db = new DB_connection($CONN_STRING);
+
+$reclamation = new Reclamation(2, 5, "hwllo", "2025-02-02", "workd", "en attente", "2022-01-01");
+
+//$reclamation->addReclamation();
+$tables = $reclamation->getAllReclamations();
+
+foreach ($tables as $table) {
+    echo $table['Type_reclamation'] . '<br>';
+}
+
+?>
 <a href="/client/index.php"></a>
 <a href="/provider/index.php"></a>
 
+<?php
+//
+//
+//use Classes\DB_Actions;
+//use Classes\Reclamation;
+//
+//require_once __DIR__ . '/Classes/DB_actions.php';
+//require_once __DIR__ . '/Classes/Reclamation.php';
+//
+//$reclamation = new  Reclamation(123, 123, "type", "date", "content", "statut", "dateCreation");
+//$DB_actions = new DB_Actions();
+//
+//$DB_actions->DBaddReclamation($reclamation);
+//?>
 
-<script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-        apiKey: "AIzaSyB8W3UxVTdAhk8sGU2BvmgtHlw5x1P712A",
-        authDomain: "tp-2-45bca.firebaseapp.com",
-        projectId: "tp-2-45bca",
-        storageBucket: "tp-2-45bca.appspot.com",
-        messagingSenderId: "1003809199077",
-        appId: "1:1003809199077:web:e9a5f63c204f7ccd50150c",
-        measurementId: "G-TP6TFMNB7H"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-</script>
 
 </body>
 </html>

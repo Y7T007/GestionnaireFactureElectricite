@@ -7,20 +7,26 @@ require_once '../Classes/Annual_Consumption.php';
 use Classes\Compteur;
 use Classes\Facture;
 use Classes\Annual_Consumption;
+use Classes\Reclamation;
+use Classes\DB_Actions;
+use Classes\DB_connection;
+
 
 // Get the data from the form
-if (isset($_POST['CompteurID']) && isset($_POST['Year']) && isset($_POST['Facture']))
-{
-    $CompteurID = $_POST['CompteurID'];
-    $ClientName = $_POST['ClientName'];
-    $Facture = $_POST['Facture'];
-    $consumption = new Compteur($CompteurID, $ClientName, $Facture);
-}
+//if (isset($_POST['CompteurID']) && isset($_POST['Year']) && isset($_POST['Facture']))
+//{
+//    $CompteurID = $_POST['CompteurID'];
+//    $ClientName = $_POST['ClientName'];
+//    $Facture = $_POST['Facture'];
+//    $consumption = new Compteur($CompteurID, $ClientName, $Facture);
+//}
 
 // Create a new instance of the Facture class
 
 // Call the addFacture method
 //$consumption->addFacture();
+
+//create new reclamations object:
 
 ?>
 

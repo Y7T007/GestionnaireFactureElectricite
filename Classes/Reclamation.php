@@ -5,16 +5,18 @@ namespace Classes;
 class Reclamation
 {
 
-        public $ReclamationID;
-        public $CompteurID;
-        public $Type_reclamation   ;
-        public $DateReclamation;
-        public $Content_reclamation;
-        public $Statut;
-        public $DateCreation;
-        public $Reponse_reclamation;
+    public $ReclamationID;
+    public $CompteurID;
+    public $Type_reclamation;
+    public $DateReclamation;
+    public $Content_reclamation;
+    public $Statut;
+    public $DateCreation;
+    public $Reponse_reclamation;
 
 //    Constructor
+    private $pdo;
+
     public function __construct($ReclamationID, $CompteurID, $Type_reclamation, $DateReclamation, $Content_reclamation, $Statut, $DateCreation)
     {
         $this->ReclamationID = $ReclamationID;
@@ -24,6 +26,8 @@ class Reclamation
         $this->Content_reclamation = $Content_reclamation;
         $this->Statut = $Statut;
         $this->DateCreation = $DateCreation;
+        $DB_connection = new DB_connection();
+        $this->pdo = $DB_connection->getPDO();
     }
 
     public function getReclamationID()
@@ -55,14 +59,17 @@ class Reclamation
     {
         return $this->Statut;
     }
+
     public function getDateCreation()
     {
         return $this->DateCreation;
     }
+
     public function getReponse_reclamation()
     {
         return $this->Reponse_reclamation;
     }
+
     public function setReponse_reclamation($Reponse_reclamation)
     {
         $this->Reponse_reclamation = $Reponse_reclamation;
@@ -70,26 +77,35 @@ class Reclamation
 
     public function addReclamation()
     {
-        // Implementation to add the current Reclamation instance to the database
+        $sql = "INSERT INTO `Reclamation` (`CompteurID`, `Type_reclamation`, `DateReclamation`, `Content_reclamation`, `Statut`, `DateCreation`) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$this->CompteurID, $this->Type_reclamation, $this->DateReclamation, $this->Content_reclamation, $this->Statut, $this->DateCreation]);
     }
 
     public function getReclamation($reclamationID)
     {
-        // Implementation to get a specific Reclamation from the database
+        $sql = "SELECT * FROM `Reclamation` WHERE `ReclamationID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$reclamationID]);
+        return $stmt->fetch();
     }
 
-    public static function getAllReclamations()
+    public function getAllReclamations()
     {
-        // Implementation to get all Reclamations from the database
+        $sql = "select * from reclamation";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
     }
-
     public function answerReclamation($reponse)
     {
-        // Implementation to set the response for the current Reclamation instance
+        $sql = "UPDATE `Reclamation` SET `Reponse_reclamation` = ? WHERE `ReclamationID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$reponse, $this->ReclamationID]);
     }
 
     public function sendNotification()
     {
-        // Implementation to send a notification related to the current Reclamation instance
+        // This is a placeholder. You'll need to implement this based on how you want to send notifications.
+        // For example, you might want to send an email, in which case you'd use the PHP mail() function.
     }
 }
