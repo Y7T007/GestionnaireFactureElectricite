@@ -3,7 +3,6 @@
 namespace Classes;
 require_once 'vendor/autoload.php';
 
-
 class Facture
 {
     public $FactureID;
@@ -15,12 +14,12 @@ class Facture
     public $DatePaiement;
     public $DateCreation;
     public $CreatedBy;
+    public $Image;
 
     private $pdo;
 
-    public function __construct($FactureID, $CompteurID, $DateFacture, $Consomation, $DateLimite, $Statut, $DatePaiement, $DateCreation, $CreatedBy)
+    public function __construct($CompteurID, $DateFacture, $Consomation, $DateLimite, $Statut, $DatePaiement, $DateCreation, $CreatedBy, $Image = null)
     {
-        $this->FactureID = $FactureID;
         $this->CompteurID = $CompteurID;
         $this->DateFacture = $DateFacture;
         $this->Consomation = $Consomation;
@@ -29,17 +28,18 @@ class Facture
         $this->DatePaiement = $DatePaiement;
         $this->DateCreation = $DateCreation;
         $this->CreatedBy = $CreatedBy;
+        $this->Image = $Image;
         $DB_connection = new DB_connection();
         $this->pdo = $DB_connection->getPDO();
     }
 
     public function addFacture()
     {
-        $sql = "INSERT INTO `Facture` (`CompteurID`, `DateFacture`, `Consomation`, `DateLimite`, `Statut`, `DatePaiement`, `DateCreation`, `CreatedBy`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `Facture` (`CompteurID`, `DateFacture`, `Consomation`, `DateLimite`, `Statut`, `DatePaiement`, `DateCreation`, `CreatedBy`, `Image`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->CompteurID, $this->DateFacture, $this->Consomation, $this->DateLimite, $this->Statut, $this->DatePaiement, $this->DateCreation, $this->CreatedBy]);
+        $stmt->execute([$this->CompteurID, $this->DateFacture, $this->Consomation, $this->DateLimite, $this->Statut, $this->DatePaiement, $this->DateCreation, $this->CreatedBy, $this->Image]);
     }
-
     public function getFacture($factureID)
     {
         $sql = "SELECT * FROM `Facture` WHERE `FactureID` = ?";
@@ -76,5 +76,23 @@ class Facture
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$compteurID]);
         return $stmt->fetchAll();
+    }
+    public function getUnpaidFactures($compteurID)
+    {
+        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ? AND `Statut` = 'waiting'";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID]);
+        return $stmt->fetchAll();
+    }
+    public function updateFacture($Consomation, $Statut, $Image,$FactureID)
+    {
+        try {
+            $sql = "UPDATE `Facture` SET `Consomation` = ?, `Statut` = ?, `Image` = ? WHERE `FactureID` = ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$Consomation, $Statut, $Image, $FactureID]);
+        } catch (PDOException $e) {
+            // Handle the exception appropriately (log, show error page, etc.)
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
+        }
     }
 }

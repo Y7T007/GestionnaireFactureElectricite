@@ -182,14 +182,20 @@ $userFactures = $facture->getAllFactures();
                                             <td>
                                                 <?php
                                                 if ($facture['Consomation'] <= 100) {
-                                                    echo '0kw-100kw';
+                                                    echo 'T1: 0kw-<strong>'.$facture['Consomation'].'</strong>kw';
                                                     $billing = $facture['Consomation'] * 0.8;
                                                 } elseif ($facture['Consomation'] <= 200) {
-                                                    echo '101kw-200kw';
-                                                    $billing = $facture['Consomation'] * 0.9;
+                                                    echo 'T1: 0kw-100kw'.'<br>';
+                                                    echo 'T2: 101kw-<strong>'.$facture['Consomation'].'</strong>kw';
+
+                                                    $billing = ($facture['Consomation']-100) * 0.9 + 80;
+
                                                 } else {
-                                                    echo '+201kw';
-                                                    $billing = $facture['Consomation'] * 1;
+                                                    echo 'T1: 0kw-100kw'.'<br>';
+                                                    echo 'T2: 101kw-200kw'.'<br>';
+                                                    echo 'T3: 201kw-<strong>'.$facture['Consomation'].'</strong>kw';
+
+                                                    $billing = ($facture['Consomation']-200) + 90 + 80;
                                                 }
                                                 ?>
                                             </td>
@@ -199,16 +205,27 @@ $userFactures = $facture->getAllFactures();
 <!--                                            <td>--><?php //echo $facture['Statut']; ?><!--</td>-->
                                             <td>
                                                 <?php
-                                                if ($facture['Statut'] === 'Unpaid') {
-                                                    if (new DateTime() > new DateTime($facture['DateLimite'])) {
-                                                        echo '<button class="btn btn-danger">Unpaid</button>';
-                                                    } else {
-                                                        echo '<button class="btn btn-warning">Pay Now</button>';
-                                                    }
-                                                } else {
+
+
+                                                if($facture['Statut'] === 'paid'){
                                                     echo '<button class="btn btn-success" disabled>Paid</button>';
                                                 }
-                                                ?>
+                                                else if ($facture['Statut'] === 'waiting'){
+                                                    if (new DateTime() > new DateTime($facture['DateLimite'])) {
+                                                        echo '<button class="btn btn-danger" disabled>Unpaid</button>';
+                                                    } else {
+                                                        echo '<form action="add-consumption.php" method="post">';
+                                                        echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
+                                                        echo '<input type="hidden" name="CompteurID" value="' . $facture['CompteurID'] . '">';
+                                                        echo '<input type="hidden" name="Consomation" value="' . $facture['Consomation'] . '">';
+                                                        echo '<input type="submit" class="btn btn-warning" value="Pay Now">';
+                                                        echo '</form>';
+                                                    }
+                                                }else if ($facture['Statut'] === 'NV'){
+                                                    echo '<button class="btn btn-dark" disabled>Checking...</button>';
+
+                                                }
+                                                    ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

@@ -14,7 +14,7 @@ use Classes\Compteur;
 use Classes\Facture;
 use Classes\Reclamation;
 
-$compteur = new Compteur(null, null, null, null);
+$compteur = new Compteur(null, null, null, null,null);
 $userData = $compteur->getCompteur($_SESSION['compteurID']);
 
 $facture = new Facture(null,null, null, null, null, null, null, null, null);
@@ -161,7 +161,7 @@ $pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurI
             </nav>
             <div class="container-fluid">
                 <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                    <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" href="add-consumption.html"><i class="fas fa-plus text-white-50 fa-sm" style="font-size: 13px;"></i> Add this month&#39;s consumption </a>
+                    <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" href="add-consumption.php"><i class="fas fa-plus text-white-50 fa-sm" style="font-size: 13px;"></i> Add this month&#39;s consumption </a>
                 </div>
                 <div class="row">
 
@@ -337,6 +337,8 @@ $pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurI
         </footer>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
+
+
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/chart.min.js"></script>
 <script src="assets/js/bs-init.js"></script>
