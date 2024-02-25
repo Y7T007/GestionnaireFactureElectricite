@@ -4,26 +4,42 @@ session_start();
 require_once 'vendor/autoload.php';
 require_once 'Classes/DB_Connection.php';
 require_once 'Classes/Reclamation.php';
+require_once 'Classes/Facture.php';
 
 use Classes\DB_Connection;
 use Classes\Reclamation;
+use Classes\Facture;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'];
     $content = $_POST['content'];
     $factureId = $_POST['factureId'];
-    $file = $_FILES['file'];
     $status = 'Pending';
     $dateCreation = date('Y-m-d H:i:s');
 
-    $dbConnection = new DB_Connection();
-    $pdo = $dbConnection->getPDO();
+    // Check if the type of the reclamation is "Facture"
+    if ($type === 'Facture') {
+        // Create a new Facture object
+        $facture = new Facture(null, $_SESSION['compteurID'], null, null, null, null, null, null, null);
+        // Check if the factureId exists in the database
+        if ($facture->getFacture($factureId) === false) {
+            // Set an error message in a session variable
+            $_SESSION['errorMessage'] = 'The factureId does not exist in the database.';
+        } else {
+            // Format the content of the reclamation
+            $content = "{ FactureId:{$factureId} } \n {$content}";
 
-    $reclamation = new Reclamation(null, $_SESSION['compteurID'], $type, null, $content, $status, date('Y-m-d'));    $reclamation->addReclamation();
+            $dbConnection = new DB_Connection();
+            $pdo = $dbConnection->getPDO();
 
-    // Redirect to a confirmation page or back to the form
-    header('Location: reclamation_finish.php');
-    exit;
+            $reclamation = new Reclamation(null, $_SESSION['compteurID'], $type, null, $content, $status, date('Y-m-d'));
+            $reclamation->addReclamation();
+
+            // Redirect to a confirmation page or back to the form
+            header('Location: reclamation_finish.php');
+            exit;
+        }
+    }
 }
 ?>
 
@@ -43,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-9 col-lg-12 col-xl-10">
+
                 <div class="card shadow-lg o-hidden border-0 my-5">
                     <div class="card-body p-0">
                         <div class="row">
@@ -54,10 +71,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Add new Reclamation</h4>
                                     </div>
+                                    <?php if (isset($_SESSION['errorMessage'])): ?>
+                                        <div class="alert alert-danger" role="alert">
+                                            <?php echo $_SESSION['errorMessage']; unset($_SESSION['errorMessage']); ?>
+                                        </div>
+                                    <?php endif; ?>
                                     <form class="user" method="POST" action="add-reclamation.php" enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <label class="form-label">Reclamation type</label>
-                                            <select class="form-control form-control-user" id="reclamationType" name="type">
+                                            <select class="form-control form-control-user" id="reclamationType" name="type" required>
                                                 <option value="Fuite interne">Fuite interne</option>
                                                 <option value="Fuite externe">Fuite externe</option>
                                                 <option value="Facture">Facture</option>
@@ -74,20 +96,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Reclamation content</label>
-                                            <input class="form-control form-control-user" type="text" id="exampleInputPassword-2" name="content" placeholder="This month record ">
+                                            <input class="form-control form-control-user" type="text" id="exampleInputPassword-2" name="content" placeholder="This month record " required>
                                         </div>
 <!--                                        <div class="mb-3">-->
 <!--                                            <label class="form-label">Facture Id</label>-->
 <!--                                            <input class="form-control form-control-user" type="number" id="exampleInputPassword-1" name="factureId" placeholder="Facture ID">-->
 <!--                                        </div>-->
-                                        <div class="mb-3">
-                                            <label class="form-label">Join a file if necessary</label>
-                                            <input id="exampleInputPassword" class="form-control form-control-user" type="file" name="file" placeholder="This month record " />
-                                        </div>
+<!--                                        <div class="mb-3">-->
+<!--                                            <label class="form-label">Join a file if necessary</label>-->
+<!--                                            <input id="exampleInputPassword" class="form-control form-control-user" type="file" name="file" placeholder="This month record " />-->
+<!--                                        </div>-->
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox small">
                                                 <div class="form-check">
-                                                    <input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1">
+                                                    <input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1" required>
                                                     <label class="form-check-label custom-control-label" for="formCheck-1">You accept that any attempt at fraud will lead to legal action against you.</label>
                                                 </div>
                                             </div>
