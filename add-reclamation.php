@@ -1,3 +1,32 @@
+<?php
+session_start();
+
+require_once 'vendor/autoload.php';
+require_once 'Classes/DB_Connection.php';
+require_once 'Classes/Reclamation.php';
+
+use Classes\DB_Connection;
+use Classes\Reclamation;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $type = $_POST['type'];
+    $content = $_POST['content'];
+    $factureId = $_POST['factureId'];
+    $file = $_FILES['file'];
+    $status = 'Pending';
+    $dateCreation = date('Y-m-d H:i:s');
+
+    $dbConnection = new DB_Connection();
+    $pdo = $dbConnection->getPDO();
+
+    $reclamation = new Reclamation(null, $_SESSION['compteurID'], $type, null, $content, $status, date('Y-m-d'));    $reclamation->addReclamation();
+
+    // Redirect to a confirmation page or back to the form
+    header('Location: reclamation_finish.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -25,16 +54,45 @@
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Add new Reclamation</h4>
                                     </div>
-                                    <form class="user">
-                                        <div class="mb-3"><label class="form-label">Reclamation type</label><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Type" name="email"></div>
-                                        <div class="mb-3"><label class="form-label">Reclamation content</label><input class="form-control form-control-user" type="number" id="exampleInputPassword-2" name="record-number" placeholder="This month record "></div>
-                                        <div class="mb-3"><label class="form-label">Facture Id</label><input class="form-control form-control-user" type="number" id="exampleInputPassword-1" name="record-number" placeholder="Facture ID"></div>
-                                        <div class="mb-3"><label class="form-label">Join a file if necessary</label><input id="exampleInputPassword" class="form-control form-control-user" type="file" name="record-number" placeholder="This month record " /></div>
+                                    <form class="user" method="POST" action="add-reclamation.php" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label class="form-label">Reclamation type</label>
+                                            <select class="form-control form-control-user" id="reclamationType" name="type">
+                                                <option value="Fuite interne">Fuite interne</option>
+                                                <option value="Fuite externe">Fuite externe</option>
+                                                <option value="Facture">Facture</option>
+                                                <option value="Autre">Autre (à spécifier)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" id="otherType" style="display: none;">
+                                            <label class="form-label">Specify Other Type</label>
+                                            <input class="form-control form-control-user" type="text" id="otherTypeInput" name="otherType" placeholder="Specify Other Type">
+                                        </div>
+                                        <div class="mb-3" id="factureId" style="display: none;">
+                                            <label class="form-label">Facture Id</label>
+                                            <input class="form-control form-control-user" type="number" id="exampleInputPassword-1" name="factureId" placeholder="Facture ID">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Reclamation content</label>
+                                            <input class="form-control form-control-user" type="text" id="exampleInputPassword-2" name="content" placeholder="This month record ">
+                                        </div>
+<!--                                        <div class="mb-3">-->
+<!--                                            <label class="form-label">Facture Id</label>-->
+<!--                                            <input class="form-control form-control-user" type="number" id="exampleInputPassword-1" name="factureId" placeholder="Facture ID">-->
+<!--                                        </div>-->
+                                        <div class="mb-3">
+                                            <label class="form-label">Join a file if necessary</label>
+                                            <input id="exampleInputPassword" class="form-control form-control-user" type="file" name="file" placeholder="This month record " />
+                                        </div>
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox small">
-                                                <div class="form-check"><input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1"><label class="form-check-label custom-control-label" for="formCheck-1">You accept that any attempt at fraud will lead to legal action against you.</label></div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1">
+                                                    <label class="form-check-label custom-control-label" for="formCheck-1">You accept that any attempt at fraud will lead to legal action against you.</label>
+                                                </div>
                                             </div>
-                                        </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Confirmer</button>
+                                        </div>
+                                        <button class="btn btn-primary d-block btn-user w-100" type="submit">Confirmer</button>
                                         <hr>
                                     </form>
                                 </div>
@@ -45,6 +103,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('reclamationType').addEventListener('change', function() {
+            if (this.value === 'Autre') {
+                document.getElementById('otherType').style.display = 'block';
+            } else {
+                document.getElementById('otherType').style.display = 'none';
+            }
+            if (this.value === 'Facture') {
+                document.getElementById('factureId').style.display = 'block';
+            } else {
+                document.getElementById('factureId').style.display = 'none';
+            }
+        });
+    </script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="assets/js/theme.js"></script>

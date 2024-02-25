@@ -1,3 +1,15 @@
+<?php
+require_once 'vendor/autoload.php';
+require_once 'Classes/Reclamation.php';
+use Classes\Reclamation;
+
+session_start();
+
+$reclamation = new Reclamation(null, $_SESSION['compteurID'], null, null, null, null, null);
+$userReclamations = $reclamation->getAllReclamations();
+
+?>
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -130,7 +142,7 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4" style="text-align: justify;">Reclamations&nbsp;&nbsp;<a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#" style="text-align: right;"><i class="fas fa-plus fa-sm text-white-50" style="font-size: 13px;"></i>&nbsp;Add Reclamation</a></h3>
+                    <h3 class="text-dark mb-4" style="text-align: justify;">Reclamations&nbsp;&nbsp;<a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="add-reclamation.php" style="text-align: right;"><i class="fas fa-plus fa-sm text-white-50" style="font-size: 13px;"></i>&nbsp;Add Reclamation</a></h3>
                     <div class="card shadow">
                         <div class="card-header py-3">
                             <p class="text-primary m-0 fw-bold">Reclamation</p>
@@ -155,29 +167,75 @@
                                         <tr>
                                             <th>N. Reclamation</th>
                                             <th>Type Anomalie</th>
-                                            <th>Month</th>
                                             <th>Date Reclamation</th>
+                                            <th>Content</th>
                                             <th>Statut</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <?php foreach ($userReclamations as $reclamation): ?>
                                         <tr>
-                                            <td>0000125</td>
-                                            <td>Fuite interne</td>
-                                            <td>February</td>
-                                            <td>13/02/2024</td>
-                                            <td style="background: rgb(143,103,0);text-align: center;color: var(--bs-card-cap-bg);font-weight: bold;border-radius: 16px;">Pending...</td>
+                                            <td><?php echo $reclamation['ReclamationID']; ?></td>
+                                            <td><?php echo $reclamation['Type_reclamation']; ?></td>
+                                            <td><?php echo $reclamation['DateCreation']; ?></td>
+                                            <td><?php echo $reclamation['Content_reclamation']; ?></td>
+                                            <td>
+                                                <?php if ($reclamation['Statut'] === 'Pending'): ?>
+                                                    <button class="btn" style="background-color: darkorange;" disabled>Pending</button>
+                                                <?php else: ?>
+                                                    <!-- Trigger the modal with a button -->
+                                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal<?php echo $reclamation['ReclamationID']; ?>">View</button>
+
+                                                    <!-- Modal -->
+                                                    <div id="myModal<?php echo $reclamation['ReclamationID']; ?>" class="modal fade" role="dialog">
+                                                        <div class="modal-dialog">
+
+                                                            <!-- Modal content-->
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title">Reclamation Details</h4>
+                                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <table class="table">
+                                                                        <tr>
+                                                                            <th>Reclamation ID</th>
+                                                                            <td><?php echo $reclamation['ReclamationID']; ?></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Type</th>
+                                                                            <td><?php echo $reclamation['Type_reclamation']; ?></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Date</th>
+                                                                            <td><?php echo $reclamation['DateReclamation']; ?></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Content</th>
+                                                                            <td><?php echo $reclamation['Content_reclamation']; ?></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Status</th>
+                                                                            <td><?php echo $reclamation['Statut']; ?></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>Reponse</th>
+                                                                            <td><?php echo $reclamation['Reponse_reclamation']; ?></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
                                         </tr>
+                                    <?php endforeach; ?>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Name</strong></td>
-                                            <td><strong>Position</strong></td>
-                                            <td><strong>Office</strong></td>
-                                            <td><strong>Start date</strong></td>
-                                            <td><strong>Salary</strong></td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                             <div class="row">
@@ -208,6 +266,11 @@
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>
