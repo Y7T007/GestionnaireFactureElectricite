@@ -14,20 +14,16 @@
     <div id="wrapper">
         <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-lightbulb"></i></div>
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
                     <div class="sidebar-brand-text mx-3"><span>Y7T007</span></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"></li>
                     <li class="nav-item"></li>
-                    <li class="nav-item"><a class="nav-link" href="Admin_Factures.html"><i class="fas fa-table"></i><span>Factures</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="Admin_Reclamations.html"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-exclamation-square">
-                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
-                                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"></path>
-                            </svg><span>&nbsp;Reclamations</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="Admin_Clients.php"><i class="far fa-user-circle"></i><span>Clients</span></a></li>
-                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link active" href="Admin_Factures.html"><i class="fas fa-table"></i><span>Factures</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="Admin_Reclamations.php"><i class="far fa-comment-alt"></i><span>Reclamations</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html"><i class="fas fa-user-circle"></i><span>Clients</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -129,10 +125,10 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4" style="text-align: justify;">Reclamations&nbsp;&nbsp;</h3>
+                    <h3 class="text-dark mb-4">Gestion des clients</h3>
                     <div class="card shadow">
                         <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Reclamation</p>
+                            <p class="text-primary m-0 fw-bold">Employee Info</p>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -152,20 +148,20 @@
                                 <table class="table my-0" id="dataTable">
                                     <thead>
                                         <tr>
-                                            <th>N. Reclamation</th>
-                                            <th>Type Anomalie</th>
-                                            <th>Month</th>
-                                            <th>Date Reclamation</th>
-                                            <th>Statut</th>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>0000125</td>
-                                            <td>Fuite interne</td>
-                                            <td>February</td>
-                                            <td>13/02/2024</td>
-                                            <td style="background: rgb(0,143,66);text-align: center;color: var(--bs-card-cap-bg);font-weight: bold;border-radius: 16px;">Answer</td>
+                                            <td>Airi Satou</td>
+                                            <td>Accountant</td>
+                                            <td>Tokyo</td>
+                                            <td style="text-align: center;background: rgb(0,71,255);font-weight: bold;color: var(--bs-card-cap-bg);border-radius: 16px;padding: 11px;">Edit</td>
+                                            <td style="text-align: center;font-weight: bold;color: var(--bs-table-bg);background: rgb(175,95,0);border-radius: 13px;margin-right: 0px;margin-bottom: 0px;margin-left: 3px;padding: 11px;padding-right: 11px;">View image</td>
+                                            <td style="text-align: center;font-weight: bold;color: var(--bs-table-bg);background: rgb(175,0,0);border-radius: 13px;margin-right: 0px;margin-bottom: 0px;margin-left: 3px;padding: 11px;">Remove</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -173,6 +169,7 @@
                                             <td><strong>Name</strong></td>
                                             <td><strong>Position</strong></td>
                                             <td><strong>Office</strong></td>
+                                            <td><strong>Age</strong></td>
                                             <td><strong>Start date</strong></td>
                                             <td><strong>Salary</strong></td>
                                         </tr>
@@ -201,7 +198,7 @@
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Yassir-Wahid</span></div>
+                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
                 </div>
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
