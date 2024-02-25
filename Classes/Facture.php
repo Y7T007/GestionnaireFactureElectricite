@@ -1,6 +1,8 @@
 <?php
 
 namespace Classes;
+use PDO;
+
 require_once 'vendor/autoload.php';
 
 class Facture

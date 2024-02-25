@@ -7,15 +7,24 @@ use Classes\Compteur;
 
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $compteur = new Compteur(null, null, null, null, null);
-    $clients = $compteur->getAllCompteurs();
+    $compteurs = $compteur->getAllCompteurs();
+    print_r($compteurs);
 
-    foreach ($clients as $client) {
-        $facture = new Facture(null, $client['CompteurID'], date('Y-m-d'), 0, date('Y-m-d', strtotime('+1 month')), 'waiting', null, date('Y-m-d'), 'Y7T007', null);
-        $facture->createFacture();
+    foreach ($compteurs as $compteur) {
+        echo $compteur['CompteurID'];
+        $facture = new Facture(
+            $compteur['CompteurID'],
+            date('Y-m-d'),
+            0,
+            date('Y-m-d', strtotime('+1 month')),
+            'waiting',
+            null,
+            date('Y-m-d'),
+            null
+        );
+        $facture->addFacture();
     }
 
-    header('Location: Admin_Factures.php');
-    exit;
-}
+//    header('Location: Admin_Factures.php');
+//    exit;
