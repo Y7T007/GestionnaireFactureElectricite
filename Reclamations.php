@@ -142,7 +142,12 @@ $userReclamations = $reclamation->getAllReclamations();
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4" style="text-align: justify;">Reclamations&nbsp;&nbsp;<a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="add-reclamation.php" style="text-align: right;"><i class="fas fa-plus fa-sm text-white-50" style="font-size: 13px;"></i>&nbsp;Add Reclamation</a></h3>
+                    <h3 class="text-dark mb-4" style="text-align: justify;">Reclamations&nbsp;&nbsp;
+                        <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="add-reclamation.php" style="text-align: right;">
+                            <i class="fas fa-plus fa-sm text-white-50" style="font-size: 13px;">
+
+                            </i>&nbsp;Add Reclamation</a>
+                    </h3>
                     <div class="card shadow">
                         <div class="card-header py-3">
                             <p class="text-primary m-0 fw-bold">Reclamation</p>

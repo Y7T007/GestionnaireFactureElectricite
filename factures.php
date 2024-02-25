@@ -224,6 +224,16 @@ $userFactures = $facture->getAllFactures();
                                                 }else if ($facture['Statut'] === 'NV'){
                                                     echo '<button class="btn btn-dark" disabled>Checking...</button>';
 
+                                                } elseif ($facture['Statut'] == 'Confirmed') {
+                                                    echo '<form action="review-consumption.php" method="post">';
+                                                    echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
+                                                    echo '<input type="submit" class="btn btn-success" value="Pay now">';
+                                                    echo '</form>';
+                                                } elseif ($facture['Statut'] == 'Refused') {
+                                                    echo '<form action="review_consumption.php" method="post">';
+                                                    echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
+                                                    echo '<input type="submit" class="btn btn-warning" value="Review (Refused)">';
+                                                    echo '</form>';
                                                 }
                                                     ?>
                                             </td>

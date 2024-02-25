@@ -69,7 +69,14 @@ class Facture
         $stmt->execute([$compteurID, $year]);
         return $stmt->fetch()['annualFacture'];
     }
-
+    public function getAnnualFacturation($compteurID, $year)
+    {
+        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ? AND YEAR(`DateFacture`) = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID, $year]);
+        $result = $stmt->fetchAll();
+        return $result ? $result : []; // Return an empty array if there are no matching records
+    }
     public function getAvailableFactureToPay($compteurID)
     {
         $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ?";
@@ -94,5 +101,11 @@ class Facture
             // Handle the exception appropriately (log, show error page, etc.)
             throw new PDOException($e->getMessage(), (int)$e->getCode());
         }
+    }
+    public function updateFactureStatus($factureID, $status)
+    {
+        $sql = "UPDATE `Facture` SET `Statut` = ? WHERE `FactureID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$status, $factureID]);
     }
 }
