@@ -87,6 +87,29 @@ class Reclamation
         $stmt->execute([$reclamationID]);
         return $stmt->fetch();
     }
+    public function getAllReclamationsByQuery($searchQuery = null)
+    {
+        $sql = "SELECT * FROM `Reclamation`";
+
+        // If a search query is provided, add a WHERE clause to the SQL query
+        if ($searchQuery !== null) {
+            $sql .= " WHERE `Content_reclamation` LIKE ?";
+        }
+
+        // Add an ORDER BY clause to the SQL query to sort the results by the Statut column
+        $sql .= " ORDER BY `Statut` ASC";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        // If a search query is provided, execute the statement with the search query as a parameter
+        if ($searchQuery !== null) {
+            $stmt->execute(["%$searchQuery%"]);
+        } else {
+            $stmt->execute();
+        }
+
+        return $stmt->fetchAll();
+    }
 
     public function getAllReclamations()
     {

@@ -6,8 +6,11 @@ use Classes\Reclamation;
 // Create a new Reclamation object
 $reclamation = new Reclamation(null, null, null, null, null, null, null);
 
+// Get the search query if it exists
+$searchQuery = isset($_GET['search']) ? $_GET['search'] : null;
+
 // Get all the reclamations
-$reclamations = $reclamation->getAllReclamations();
+$reclamations = $reclamation->getAllReclamationsByQuery($searchQuery);
 
 // Check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -173,7 +176,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </select>&nbsp;</label></div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                                        <form action="Admin_Reclamations.php" method="get">
+                                            <input type="search" name="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search">
+                                            <button type="submit" hidden>Search</button>
+                                        </form>
+
+                                        <label class="form-label">
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
@@ -182,8 +193,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <tr>
                                             <th>N. Reclamation</th>
                                             <th>Type Anomalie</th>
-                                            <th>Month</th>
                                             <th>Date Reclamation</th>
+                                            <th>Content</th>
                                             <th>Statut</th>
                                         </tr>
                                     </thead>
@@ -191,9 +202,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?php foreach ($reclamations as $reclamation): ?>
                                         <tr>
                                             <td><?php echo $reclamation['ReclamationID']; ?></td>
-                                            <td><?php echo $reclamation['CompteurID']; ?></td>
                                             <td><?php echo $reclamation['Type_reclamation']; ?></td>
-                                            <td><?php echo $reclamation['DateReclamation']; ?></td>
+                                            <td><?php echo $reclamation['DateCreation']; ?></td>
                                             <td><?php echo $reclamation['Content_reclamation']; ?></td>
                                             <td><?php echo $reclamation['Statut']; ?></td>
                                             <td>
@@ -269,6 +279,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
+
+    <script>
+        // Select the table body
+        let tbody = document.querySelector("#dataTable tbody");
+
+        // Convert the HTMLCollection of table rows to an array
+        let rows = Array.from(tbody.rows);
+
+        // Sort the array of table rows
+        rows.sort((a, b) => {
+            // Get the status of each row
+            let statusA = a.cells[4].innerText.toUpperCase(); // Assuming the status is in the 5th column
+            let statusB = b.cells[4].innerText.toUpperCase(); // Adjust the index as per your table
+
+            // Compare the statuses
+            if (statusA < statusB) {
+                return -1;
+            } else if (statusA > statusB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        // Remove all the existing rows from the table body
+        while (tbody.firstChild) {
+            tbody.firstChild.remove();
+        }
+
+        // Append the sorted rows to the table body
+        for (let row of rows) {
+            tbody.appendChild(row);
+        }
+    </script>
+
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>
