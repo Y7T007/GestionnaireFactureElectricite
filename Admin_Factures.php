@@ -1,3 +1,17 @@
+<?php
+require_once 'vendor/autoload.php';
+require_once 'Classes/Facture.php';
+use Classes\Facture;
+
+// Create a new Facture object
+$facture = new Facture(null, null, null, null, null, null, null, null, null);
+
+// Get all the factures
+$factures = $facture->getAllFactures();
+
+// Rest of the PHP code...
+?>
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -147,35 +161,84 @@
                             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                                 <table class="table my-0" id="dataTable">
                                     <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Address</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Facture ID</th>
+                                        <th>Compteur ID</th>
+                                        <th>Date Facture</th>
+                                        <th>Consomation</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
+                                    <?php foreach ($factures as $facture): ?>
                                         <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td style="text-align: center;background: rgb(0,71,255);font-weight: bold;color: var(--bs-card-cap-bg);border-radius: 16px;padding: 11px;">Edit</td>
-                                            <td style="text-align: center;font-weight: bold;color: var(--bs-table-bg);background: rgb(175,95,0);border-radius: 13px;margin-right: 0px;margin-bottom: 0px;margin-left: 3px;padding: 11px;padding-right: 11px;">View image</td>
-                                            <td style="text-align: center;font-weight: bold;color: var(--bs-table-bg);background: rgb(175,0,0);border-radius: 13px;margin-right: 0px;margin-bottom: 0px;margin-left: 3px;padding: 11px;">Remove</td>
+                                            <td><?php echo $facture['FactureID']; ?></td>
+                                            <td><?php echo $facture['CompteurID']; ?></td>
+                                            <td><?php echo $facture['DateFacture']; ?></td>
+                                            <td><?php echo $facture['Consomation']; ?></td>
+                                            <td><?php echo $facture['Statut']; ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#factureModal<?php echo $facture['FactureID']; ?>">
+                                                    View Details
+                                                </button>
+                                            </td>
                                         </tr>
+                                    <?php endforeach; ?>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Name</strong></td>
-                                            <td><strong>Position</strong></td>
-                                            <td><strong>Office</strong></td>
-                                            <td><strong>Age</strong></td>
-                                            <td><strong>Start date</strong></td>
-                                            <td><strong>Salary</strong></td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
+
+                                <!-- Modals for viewing facture details -->
+                                <?php foreach ($factures as $facture): ?>
+                                    <div class="modal fade" id="factureModal<?php echo $facture['FactureID']; ?>" tabindex="-1" aria-labelledby="factureModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="factureModalLabel">Facture Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Facture ID: <?php echo $facture['FactureID']; ?></p>
+                                                    <p>Compteur ID: <?php echo $facture['CompteurID']; ?></p>
+                                                    <p>Date Facture: <?php echo $facture['DateFacture']; ?></p>
+                                                    <p>Consomation: <?php echo $facture['Consomation']; ?></p>
+                                                    <p>Status: <?php echo $facture['Statut']; ?></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
+
+                            <!-- Modals for viewing facture details -->
+                            <?php foreach ($factures as $facture): ?>
+                                <div class="modal fade" id="factureModal<?php echo $facture['FactureID']; ?>" tabindex="-1" aria-labelledby="factureModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="factureModalLabel">Facture Details</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Facture ID: <?php echo $facture['FactureID']; ?></p>
+                                                <p>Compteur ID: <?php echo $facture['CompteurID']; ?></p>
+                                                <p>Date Facture: <?php echo $facture['DateFacture']; ?></p>
+                                                <p>Consomation: <?php echo $facture['Consomation']; ?></p>
+                                                <p>Status: <?php echo $facture['Statut']; ?></p>
+                                                <?php if ($facture['Image'] !== null): ?>
+                                                    <img src="<?php echo $facture['Image']; ?>" alt="Facture Image">
+                                                <?php endif; ?>                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Confirm</button>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Refuse</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
                                     <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
