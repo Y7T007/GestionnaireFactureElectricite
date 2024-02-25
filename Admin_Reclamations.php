@@ -1,20 +1,31 @@
 <?php
-require_once 'Classes/Compteur.php';
-use Classes\Compteur;
+require_once 'vendor/autoload.php';
+require_once 'Classes/Reclamation.php';
+use Classes\Reclamation;
 
-// Get the CompteurID from the GET parameters
-$CompteurID = $_GET['CompteurID'];
+// Create a new Reclamation object
+$reclamation = new Reclamation(null, null, null, null, null, null, null);
 
-// Create a new Compteur object
-$compteur = new Compteur($CompteurID, null, null, null, null);
+// Get all the reclamations
+$reclamations = $reclamation->getAllReclamations();
 
-// Delete the client
-$compteur->deleteCompteur();
+// Check if the form has been submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get the reclamation ID and the admin's response from the POST parameters
+    $ReclamationID = $_POST['ReclamationID'];
+    $Reponse_reclamation = $_POST['Reponse_reclamation'];
 
-// Redirect to the clients page
-header('Location: Admin_clients.php');
-exit;
+    // Create a new Reclamation object
+    $reclamation = new Reclamation($ReclamationID, null, null, null, null, 'Responded', null);
 
+    // Store the admin's response in the database
+    $reclamation->answerReclamation($Reponse_reclamation);
+
+    // Redirect to the reclamations page
+    header('Location: Admin_Reclamations.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -177,23 +188,24 @@ exit;
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <?php foreach ($reclamations as $reclamation): ?>
                                         <tr>
-                                            <td>0000125</td>
-                                            <td>Fuite interne</td>
-                                            <td>February</td>
-                                            <td>13/02/2024</td>
-                                            <td style="background: rgb(0,143,66);text-align: center;color: var(--bs-card-cap-bg);font-weight: bold;border-radius: 16px;">Answer</td>
+                                            <td><?php echo $reclamation['ReclamationID']; ?></td>
+                                            <td><?php echo $reclamation['CompteurID']; ?></td>
+                                            <td><?php echo $reclamation['Type_reclamation']; ?></td>
+                                            <td><?php echo $reclamation['DateReclamation']; ?></td>
+                                            <td><?php echo $reclamation['Content_reclamation']; ?></td>
+                                            <td><?php echo $reclamation['Statut']; ?></td>
+                                            <td>
+                                                <?php if ($reclamation['Statut'] === 'Pending'): ?>
+                                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reclamationModal<?php echo $reclamation['ReclamationID']; ?>">Respond</button>
+                                                <?php else: ?>
+                                                    <button class="btn btn-secondary" disabled>Responded</button>
+                                                <?php endif; ?>
+                                            </td>
                                         </tr>
+                                    <?php endforeach; ?>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Name</strong></td>
-                                            <td><strong>Position</strong></td>
-                                            <td><strong>Office</strong></td>
-                                            <td><strong>Start date</strong></td>
-                                            <td><strong>Salary</strong></td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                             <div class="row">
@@ -216,6 +228,40 @@ exit;
                     </div>
                 </div>
             </div>
+
+            <!-- Modals for responding to reclamations -->
+            <?php foreach ($reclamations as $reclamation): ?>
+                <div class="modal fade" id="reclamationModal<?php echo $reclamation['ReclamationID']; ?>" tabindex="-1" aria-labelledby="reclamationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="reclamationModalLabel">Respond to Reclamation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="Admin_Reclamations.php" method="post">
+                                <div class="modal-body">
+                                    <!-- Display all the information about the reclamation -->
+                                    <p>Reclamation ID: <?php echo $reclamation['ReclamationID']; ?></p>
+                                    <p>Compteur ID: <?php echo $reclamation['CompteurID']; ?></p>
+                                    <p>Type: <?php echo $reclamation['Type_reclamation']; ?></p>
+                                    <p>Date: <?php echo $reclamation['DateReclamation']; ?></p>
+                                    <p>Content: <?php echo $reclamation['Content_reclamation']; ?></p>
+                                    <p>Status: <?php echo $reclamation['Statut']; ?></p>
+
+                                    <!-- Input field for the admin's response -->
+                                    <input type="hidden" name="ReclamationID" value="<?php echo $reclamation['ReclamationID']; ?>">
+                                    <label for="Reponse_reclamation">Response:</label>
+                                    <input type="text" id="Reponse_reclamation" name="Reponse_reclamation">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
                     <div class="text-center my-auto copyright"><span>Copyright © Yassir-Wahid</span></div>

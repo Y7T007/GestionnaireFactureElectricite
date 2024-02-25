@@ -96,10 +96,11 @@ class Reclamation
     }
     public function answerReclamation($reponse)
     {
-        $sql = "UPDATE `Reclamation` SET `Reponse_reclamation` = ? WHERE `ReclamationID` = ?";
+        $sql = "UPDATE `Reclamation` SET `Reponse_reclamation` = ?, `Statut` = 'responded' WHERE `ReclamationID` = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$reponse, $this->ReclamationID]);
     }
+
 
     public function sendNotification()
     {
