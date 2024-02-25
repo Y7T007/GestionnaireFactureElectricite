@@ -161,24 +161,128 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>0000125</td>
-                                            <td>Yassir Wahid</td>
-                                            <td>13/02/2024</td>
-                                            <td>123 Rue Casa</td>
-                                            <td>15200</td>
-                                            <td style="background: rgb(0,143,66);text-align: center;color: var(--bs-card-cap-bg);font-weight: bold;border-radius: 16px;">Modifier</td>
-                                        </tr>
+                                    <?php
+                                    require_once 'Classes/Compteur.php';
+                                    use Classes\Compteur;
+
+                                    // Create a new Compteur object
+                                    $compteur = new Compteur(null, null, null, null, null);
+
+                                    // Get all clients
+                                    $clients = $compteur->getAllCompteurs();
+
+                                    // Loop through the clients and display each one in a row of the table
+                                    foreach ($clients as $client) {
+                                        echo "<tr>";
+                                        echo "<td>{$client['CompteurID']}</td>";
+                                        echo "<td>{$client['ClientName']}</td>";
+                                        echo "<td>{$client['Address']}</td>";
+                                        echo "<td>{$client['dateNaissance']}</td>";
+                                        echo "<td>{$client['ElectricalDashNumber']}</td>";
+                                        echo "<td><button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#updateModal{$client['CompteurID']}'>Update</button></td>";
+                                        echo "<td><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#deleteModal{$client['CompteurID']}'>Delete</button></td>";
+                                        echo "</tr>";
+                                    }
+                                    ?>
+                                    <!-- Delete Confirmation Modal -->
+                                    <!-- Add Client Modal -->
+                                    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="addModalLabel">Add Client</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="Admin_add_client.php" method="post">
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Name</label>
+                                                            <input type="text" class="form-control" name="ClientName">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Address</label>
+                                                            <input type="text" class="form-control" name="Address">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Birthdate</label>
+                                                            <input type="date" class="form-control" name="dateNaissance">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Electrical Dash Number</label>
+                                                            <input type="text" class="form-control" name="ElectricalDashNumber">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">Add</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Update Client Modal -->
+                                    <?php foreach ($clients as $client): ?>
+                                        <div class="modal fade" id="updateModal<?php echo $client['CompteurID']; ?>" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="updateModalLabel">Update Client</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="Admin_update_client.php?CompteurID=<?php echo $client['CompteurID']; ?>" method="post">
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="CompteurID" value="<?php echo $client['CompteurID']; ?>">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Name</label>
+                                                                <input type="text" class="form-control" name="ClientName" value="<?php echo $client['ClientName']; ?>">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Address</label>
+                                                                <input type="text" class="form-control" name="Address" value="<?php echo $client['Address']; ?>">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Birthdate</label>
+                                                                <input type="date" class="form-control" name="dateNaissance" value="<?php echo $client['dateNaissance']; ?>">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Electrical Dash Number</label>
+                                                                <input type="text" class="form-control" name="ElectricalDashNumber" value="<?php echo $client['ElectricalDashNumber']; ?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    <?php foreach ($clients as $client): ?>
+                                        <div class="modal fade" id="deleteModal<?php echo $client['CompteurID']; ?>" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to delete this client?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <a href="Admin_delete_client.php?CompteurID=<?php echo $client['CompteurID']; ?>" class="btn btn-danger">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    <tr>
+                                        <td colspan="6">
+                                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">Add Client</button>
+                                        </td>
+                                    </tr>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Name</strong></td>
-                                            <td><strong>Position</strong></td>
-                                            <td><strong>Office</strong></td>
-                                            <td><strong>Start date</strong></td>
-                                            <td><strong>Salary</strong></td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                             <div class="row">
