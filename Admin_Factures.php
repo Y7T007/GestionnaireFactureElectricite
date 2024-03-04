@@ -226,6 +226,8 @@ $compteur = new Compteur(null, null, null, null, null);
                                                     echo '<button type="button" class="btn btn-success" disabled>Confirmed</button>';
                                                 } elseif ($facture['Statut'] == 'Refused') {
                                                     echo '<button type="button" class="btn btn-warning" disabled>Refused</button>';
+                                                } else{
+                                                    echo '<button type="button" class="btn btn-dark" disabled>'.$facture['Statut'].'</button>';
                                                 }
                                                 ?>
                                             </td>

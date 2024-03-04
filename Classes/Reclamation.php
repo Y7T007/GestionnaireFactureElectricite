@@ -138,4 +138,11 @@ class Reclamation
         $stmt->execute([$compteurID]);
         return $stmt->fetch()['pendingReclamations'];
     }
+    public function getUserReclamations($compteurID)
+    {
+        $sql = "SELECT * FROM `Reclamation` WHERE `CompteurID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID]);
+        return $stmt->fetchAll();
+    }
 }

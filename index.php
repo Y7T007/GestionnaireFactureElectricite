@@ -164,7 +164,7 @@ $pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurI
             </nav>
             <div class="container-fluid">
                 <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                    <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" href="add-consumption.php"><i class="fas fa-plus text-white-50 fa-sm" style="font-size: 13px;"></i> Add this month&#39;s consumption </a>
+                    <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" type="button" href="add-reclamation.php"><i class="fas fa-plus text-white-50 fa-sm" style="font-size: 13px;"></i> Add new reclamation </a>
                 </div>
                 <div class="row">
 

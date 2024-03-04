@@ -5,8 +5,8 @@ use Classes\Facture;
 session_start();
 
 // Fetch the factures for the current logged in user
-$facture = new Facture(null, $_SESSION['compteurID'], null, null, null, null, null, null, null);
-$userFactures = $facture->getAllFactures();
+$facture = new Facture( null, null, null, null, null, null, null, null, null);
+$userFactures = $facture->getUserFactures($_SESSION['compteurID']);
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
@@ -218,14 +218,14 @@ $userFactures = $facture->getAllFactures();
                                                         echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
                                                         echo '<input type="hidden" name="CompteurID" value="' . $facture['CompteurID'] . '">';
                                                         echo '<input type="hidden" name="Consomation" value="' . $facture['Consomation'] . '">';
-                                                        echo '<input type="submit" class="btn btn-warning" value="Pay Now">';
+                                                        echo '<input type="submit" class="btn btn-warning" value="Verify Now">';
                                                         echo '</form>';
                                                     }
                                                 }else if ($facture['Statut'] === 'NV'){
                                                     echo '<button class="btn btn-dark" disabled>Checking...</button>';
 
                                                 } elseif ($facture['Statut'] == 'Confirmed') {
-                                                    echo '<form action="review-consumption.php" method="post">';
+                                                    echo '<form action="Payement-Service.php?FactureID='.$facture['FactureID'].'" method="post">';
                                                     echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
                                                     echo '<input type="submit" class="btn btn-success" value="Pay now">';
                                                     echo '</form>';

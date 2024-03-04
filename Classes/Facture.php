@@ -2,6 +2,7 @@
 
 namespace Classes;
 use PDO;
+use PDOException;
 
 require_once 'vendor/autoload.php';
 
@@ -57,11 +58,20 @@ class Facture
         return $stmt->fetchAll();
     }
 
-    public function payFacture($paymentDate)
+    public function payFacture($id)
     {
-        $sql = "UPDATE `Facture` SET `DatePaiement` = ?, `Statut` = 'Paid' WHERE `FactureID` = ?";
+        $sql = "UPDATE `Facture` SET  `Statut` = 'paid' WHERE `FactureID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$paymentDate, $this->FactureID]);
+
+        // Enable error reporting
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        try {
+            $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            // If there's an error, print it out
+            echo "Error: " . $e->getMessage();
+        }
     }
 
     public function getAnnualFacture($compteurID, $year)
@@ -109,5 +119,12 @@ class Facture
         $sql = "UPDATE `Facture` SET `Statut` = ? WHERE `FactureID` = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$status, $factureID]);
+    }
+    public function getUserFactures($compteurID)
+    {
+        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$compteurID]);
+        return $stmt->fetchAll();
     }
 }

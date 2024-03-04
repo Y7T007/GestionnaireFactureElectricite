@@ -26,5 +26,5 @@ session_start();
         $facture->addFacture();
     }
 
-//    header('Location: Admin_Factures.php');
-//    exit;
+    header('Location: Admin_Factures.php');
+    exit;

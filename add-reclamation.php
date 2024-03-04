@@ -13,12 +13,12 @@ use Classes\Facture;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'];
     $content = $_POST['content'];
-    $factureId = $_POST['factureId'];
+    $factureId = $_POST['factureId'] ?? null; // Use null coalescing operator to avoid undefined index notice
     $status = 'Pending';
     $dateCreation = date('Y-m-d H:i:s');
 
-    // Check if the type of the reclamation is "Facture"
-    if ($type === 'Facture') {
+    // If the type of the reclamation is "Facture" and a factureId is provided
+    if ($type === 'Facture' && $factureId !== null) {
         // Create a new Facture object
         $facture = new Facture(null, $_SESSION['compteurID'], null, null, null, null, null, null, null);
         // Check if the factureId exists in the database
@@ -28,18 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Format the content of the reclamation
             $content = "{ FactureId:{$factureId} } \n {$content}";
-
-            $dbConnection = new DB_Connection();
-            $pdo = $dbConnection->getPDO();
-
-            $reclamation = new Reclamation(null, $_SESSION['compteurID'], $type, null, $content, $status, date('Y-m-d'));
-            $reclamation->addReclamation();
-
-            // Redirect to a confirmation page or back to the form
-            header('Location: reclamation_finish.php');
-            exit;
         }
     }
+
+    $dbConnection = new DB_Connection();
+    $pdo = $dbConnection->getPDO();
+
+    $reclamation = new Reclamation(null, $_SESSION['compteurID'], $type, null, $content, $status, date('Y-m-d'));
+    $reclamation->addReclamation();
+
+    // Redirect to a confirmation page or back to the form
+    header('Location: reclamation_finish.php');
+    exit;
 }
 ?>
 
