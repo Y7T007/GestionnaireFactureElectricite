@@ -1,20 +1,20 @@
 <?php
 require_once 'vendor/autoload.php';
 require_once 'Classes/Facture.php';
-require_once 'Classes/Compteur.php';
+require_once 'Classes/Clients.php';
 use Classes\Facture;
-use Classes\Compteur;
+use Classes\Clients;
 
 session_start();
 
-    $compteur = new Compteur(null, null, null, null, null);
-    $compteurs = $compteur->getAllCompteurs();
-    print_r($compteurs);
+    $Clients = new Clients(null, null, null, null, null);
+    $Clientss = $Clients->getAllClientss();
+    print_r($Clientss);
 
-    foreach ($compteurs as $compteur) {
-        echo $compteur['CompteurID'];
+    foreach ($Clientss as $Clients) {
+        echo $Clients['ClientsID'];
         $facture = new Facture(
-            $compteur['CompteurID'],
+            $Clients['ClientsID'],
             date('Y-m-d'),
             0,
             date('Y-m-d', strtotime('+1 month')),

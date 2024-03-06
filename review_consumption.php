@@ -6,26 +6,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $factureID = $_POST['FactureID'];
 }
 
-$CompteurID = $_SESSION['compteurID'];
+$ClientsID = $_SESSION['ClientsID'];
 
-if (!isset($CompteurID)){
+if (!isset($ClientsID)){
     header('Location: login.php');
     exit;
 }
 
-require_once 'Classes/Compteur.php';
-use Classes\Compteur;
+require_once 'Classes/Clients.php';
+use Classes\Clients;
 use Classes\Facture;
 
-// Fetch the Compteur for the current logged-in user
-$compteur = new Compteur($_SESSION['compteurID'], null, null, null, null);
-$userCompteur = $compteur->getCompteur($_SESSION['compteurID']);
+// Fetch the Clients for the current logged-in user
+$Clients = new Clients($_SESSION['ClientsID'], null, null, null, null);
+$userClients = $Clients->getClients($_SESSION['ClientsID']);
 
 // Retrieve the ElectricalDashNumber
-$ElectricalDashNumber = $userCompteur['ElectricalDashNumber'];
+$ElectricalDashNumber = $userClients['ElectricalDashNumber'];
 
-$facture = new Facture(null, $_SESSION['compteurID'], null, null, null, null, null, null, null);
-$unpaidFactures = $facture->getUnpaidFactures($_SESSION['compteurID']);
+$facture = new Facture(null, $_SESSION['ClientsID'], null, null, null, null, null, null, null);
+$unpaidFactures = $facture->getUnpaidFactures($_SESSION['ClientsID']);
 
 // Fetch the facture data
 $factureData = $facture->getFacture($factureID);
@@ -61,8 +61,8 @@ $factureData = $facture->getFacture($factureID);
                                 </div>
                                 <form class="user" method="POST" action="handle-add-consumption.php" enctype="multipart/form-data">
                                     <div class="mb-3"></div>
-                                    <label for="exampleInputPassword-2">Compteur ID:</label>
-                                    <input class="form-control form-control-user disabled" type="number" value="<?php echo $CompteurID;?>" id="exampleInputPassword-2" name="record-number" placeholder="Compteur ID" style="margin-bottom: 13px;margin-top: 13px;" disabled>
+                                    <label for="exampleInputPassword-2">Clients ID:</label>
+                                    <input class="form-control form-control-user disabled" type="number" value="<?php echo $ClientsID;?>" id="exampleInputPassword-2" name="record-number" placeholder="Clients ID" style="margin-bottom: 13px;margin-top: 13px;" disabled>
                                     <label for="exampleInputPassword-3">Actual Dash number :</label>
                                     <input class="form-control form-control-user" type="number" value="<?php echo $ElectricalDashNumber; ?>" id="exampleInputPassword-3" name="default-number" placeholder="Actual Status Number" style="margin-bottom: 14px;" disabled>
                                     <input class="form-control form-control-user" type="hidden" value="<?php echo $ElectricalDashNumber; ?>" id="exampleInputPassword-3" name="default-number" placeholder="Actual Status Number" style="margin-bottom: 14px;">

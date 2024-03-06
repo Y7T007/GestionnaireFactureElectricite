@@ -35,7 +35,7 @@
                                     ?>
                                     <form class="user" method="post" action="login_process.php">
                                         <div class="mb-3">
-                                            <input class="form-control form-control-user" type="text" id="inputCompteurID" placeholder="Enter Compteur ID..." name="compteurID">
+                                            <input class="form-control form-control-user" type="text" id="inputClientsID" placeholder="Enter Clients ID..." name="ClientsID">
                                         </div>
                                         <div class="mb-3">
                                             <input class="form-control form-control-user" type="date" id="inputDateNaissance" placeholder="Enter Date of Birth..." name="dateNaissance">

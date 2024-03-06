@@ -1,17 +1,17 @@
 <?php
-require_once 'Classes/Compteur.php';
-use Classes\Compteur;
+require_once 'Classes/Clients.php';
+use Classes\Clients;
 
 session_start();
 
 // Fetch the user's information
-$compteur = new Compteur($_SESSION['compteurID'], null, null, null,null);
-$userInfo = $compteur->getCompteur($_SESSION['compteurID']);
+$Clients = new Clients($_SESSION['ClientsID'], null, null, null,null);
+$userInfo = $Clients->getClients($_SESSION['ClientsID']);
 
 // Update the user's information if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $compteur->updateCompteur($_POST['ClientName'], $_POST['Address'], $_POST['dateNaissance'],null);
-    $userInfo = $compteur->getCompteur($_SESSION['compteurID']); // Fetch the updated information
+    $Clients->updateClients($_POST['ClientName'], $_POST['Address'], $_POST['dateNaissance'],null);
+    $userInfo = $Clients->getClients($_SESSION['ClientsID']); // Fetch the updated information
 }
 
 // Rest of the HTML code...

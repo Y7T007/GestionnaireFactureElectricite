@@ -4,21 +4,21 @@ namespace Classes;
 
 class Annual_Consumption
 {
-    public $CompteurID;
+    public $ClientsID;
     public $Year;
     public $Consumption;
     public $DateCreation;
 
-    public function __construct($CompteurID, $Year, $Consumption)
+    public function __construct($ClientsID, $Year, $Consumption)
     {
-        $this->CompteurID = $CompteurID;
+        $this->ClientsID = $ClientsID;
         $this->Year = $Year;
         $this->Consumption = $Consumption;
     }
 
-    public function getCompteurID()
+    public function getClientsID()
     {
-        return $this->CompteurID;
+        return $this->ClientsID;
     }
 
     public function getYear()

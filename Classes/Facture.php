@@ -10,7 +10,7 @@ require_once 'vendor/autoload.php';
 class Facture
 {
     public $factureId;
-    public $compteurId;
+    public $ClientsId;
     public $dateFacture;
     public $consomation;
     public $dateLimite;
@@ -22,9 +22,9 @@ class Facture
 
     private $pdo;
 
-    public function __construct($compteurId, $dateFacture, $consomation, $dateLimite, $statut, $datePaiement, $dateCreation, $createdBy, $image = null)
+    public function __construct($ClientsId, $dateFacture, $consomation, $dateLimite, $statut, $datePaiement, $dateCreation, $createdBy, $image = null)
     {
-        $this->compteurId = $compteurId;
+        $this->ClientsId = $ClientsId;
         $this->dateFacture = $dateFacture;
         $this->consomation = $consomation;
         $this->dateLimite = $dateLimite;
@@ -39,10 +39,10 @@ class Facture
 
     public function addFacture()
     {
-        $sql = "INSERT INTO `Facture` (`CompteurID`, `DateFacture`, `Consomation`, `DateLimite`, `Statut`, `DatePaiement`, `DateCreation`, `CreatedBy`, `Image`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `Facture` (`ClientsID`, `DateFacture`, `Consomation`, `DateLimite`, `Statut`, `DatePaiement`, `DateCreation`, `CreatedBy`, `Image`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->compteurId, $this->dateFacture, $this->consomation, $this->dateLimite, $this->statut, $this->datePaiement, $this->dateCreation, $this->createdBy, $this->image]);
+        $stmt->execute([$this->ClientsId, $this->dateFacture, $this->consomation, $this->dateLimite, $this->statut, $this->datePaiement, $this->dateCreation, $this->createdBy, $this->image]);
     }
 
     public function getFacture($factureId)
@@ -76,36 +76,36 @@ class Facture
         }
     }
 
-    public function getAnnualFacture($compteurId, $year)
+    public function getAnnualFacture($ClientsId, $year)
     {
-        $sql = "SELECT SUM(`Consomation`) as annualFacture FROM `Facture` WHERE `CompteurID` = ? AND YEAR(`DateFacture`) = ?";
+        $sql = "SELECT SUM(`Consomation`) as annualFacture FROM `Facture` WHERE `ClientsID` = ? AND YEAR(`DateFacture`) = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId, $year]);
+        $stmt->execute([$ClientsId, $year]);
         return $stmt->fetch()['annualFacture'];
     }
 
-    public function getAnnualFacturation($compteurId, $year)
+    public function getAnnualFacturation($ClientsId, $year)
     {
-        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ? AND YEAR(`DateFacture`) = ?";
+        $sql = "SELECT * FROM `Facture` WHERE `ClientsID` = ? AND YEAR(`DateFacture`) = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId, $year]);
+        $stmt->execute([$ClientsId, $year]);
         $result = $stmt->fetchAll();
         return $result ? $result : []; // Return an empty array if there are no matching records
     }
 
-    public function getAvailableFactureToPay($compteurId)
+    public function getAvailableFactureToPay($ClientsId)
     {
-        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ?";
+        $sql = "SELECT * FROM `Facture` WHERE `ClientsID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId]);
+        $stmt->execute([$ClientsId]);
         return $stmt->fetchAll();
     }
 
-    public function getUnpaidFactures($compteurId)
+    public function getUnpaidFactures($ClientsId)
     {
-        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ? AND `Statut` = 'waiting'";
+        $sql = "SELECT * FROM `Facture` WHERE `ClientsID` = ? AND `Statut` = 'waiting'";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId]);
+        $stmt->execute([$ClientsId]);
         return $stmt->fetchAll();
     }
 
@@ -128,11 +128,11 @@ class Facture
         $stmt->execute([$status, $factureId]);
     }
 
-    public function getUserFactures($compteurId)
+    public function getUserFactures($ClientsId)
     {
-        $sql = "SELECT * FROM `Facture` WHERE `CompteurID` = ?";
+        $sql = "SELECT * FROM `Facture` WHERE `ClientsID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId]);
+        $stmt->execute([$ClientsId]);
         return $stmt->fetchAll();
     }
 }

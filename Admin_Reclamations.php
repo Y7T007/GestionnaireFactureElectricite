@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="modal-body">
                                     <!-- Display all the information about the reclamation -->
                                     <p>Reclamation ID: <?php echo $reclamation['ReclamationID']; ?></p>
-                                    <p>Compteur ID: <?php echo $reclamation['CompteurID']; ?></p>
+                                    <p>Clients ID: <?php echo $reclamation['ClientsID']; ?></p>
                                     <p>Type: <?php echo $reclamation['Type_reclamation']; ?></p>
                                     <p>Date: <?php echo $reclamation['DateReclamation']; ?></p>
                                     <p>Content: <?php echo $reclamation['Content_reclamation']; ?></p>

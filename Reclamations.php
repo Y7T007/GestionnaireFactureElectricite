@@ -5,8 +5,8 @@ use Classes\Reclamation;
 
 session_start();
 
-$reclamation = new Reclamation(null, $_SESSION['compteurID'], null, null, null, null, null);
-$userReclamations = $reclamation->getUserReclamations($_SESSION['compteurID']);
+$reclamation = new Reclamation(null, $_SESSION['ClientsID'], null, null, null, null, null);
+$userReclamations = $reclamation->getUserReclamations($_SESSION['ClientsID']);
 
 ?>
 

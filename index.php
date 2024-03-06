@@ -9,25 +9,25 @@ if (!isset($_SESSION['loggedin'])) {
     exit;
 }
 
-require_once 'Classes/Compteur.php';
+require_once 'Classes/Clients.php';
 require_once 'Classes/Facture.php';
 require_once 'Classes/Reclamation.php';
 
-use Classes\Compteur;
+use Classes\Clients;
 use Classes\Facture;
 use Classes\Reclamation;
 
-$compteur = new Compteur(null, null, null, null,null);
-$userData = $compteur->getCompteur($_SESSION['compteurID']);
+$Clients = new Clients(null, null, null, null,null);
+$userData = $Clients->getClients($_SESSION['ClientsID']);
 
 $facture = new Facture(null,null, null, null, null, null, null, null, null);
 $annualFacture=0;
 
-$annualFacture = $facture->getAnnualFacture($_SESSION['compteurID'], date('Y'))??0;
-$availableFactureToPay = $facture->getAvailableFactureToPay($_SESSION['compteurID']);
+$annualFacture = $facture->getAnnualFacture($_SESSION['ClientsID'], date('Y'))??0;
+$availableFactureToPay = $facture->getAvailableFactureToPay($_SESSION['ClientsID']);
 
 $reclamation = new Reclamation(null, null, null, null, null, null, null);
-$pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurID']);
+$pendingReclamations = $reclamation->getPendingReclamations($_SESSION['ClientsID']);
 
 ?>
 
@@ -56,10 +56,12 @@ $pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurI
                 <li class="nav-item"><a class="nav-link active" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="profile.php"><i class="fas fa-user"></i><span>Profile</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="factures.php"><i class="fas fa-table"></i><span>Factures</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="Reclamations.php"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-exclamation-square">
+                <li class="nav-item"><a class="nav-link" href="Reclamations.php">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-exclamation-square">
                             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
                             <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"></path>
-                        </svg><span>&nbsp;Reclamations</span></a></li>
+                        </svg>
+                        <span>&nbsp;Reclamations</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="login.php"><i class="far fa-user-circle"></i><span>Login</span></a></li>
                 <li class="nav-item"></li>
             </ul>
@@ -224,7 +226,7 @@ $pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurI
                                 $facture = new Facture(null,null, null, null, null, null, null, null, null);
                                 $allFactures = $facture->getAllFactures();
                                 $userFactures = array_filter($allFactures, function($facture) {
-                                    return $facture['CompteurID'] == $_SESSION['compteurID'];
+                                    return $facture['ClientsID'] == $_SESSION['ClientsID'];
                                 });
                                 
                                 $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -278,7 +280,7 @@ $pendingReclamations = $reclamation->getPendingReclamations($_SESSION['compteurI
                             $facture = new Facture(null,null, null, null, null, null, null, null, null);
                             $allFactures = $facture->getAllFactures();
                             $userFactures = array_filter($allFactures, function($facture) {
-                                return $facture['CompteurID'] == $_SESSION['compteurID'];
+                                return $facture['ClientsID'] == $_SESSION['ClientsID'];
                             });
 
                             // Step 2: Prepare the data for the chart

@@ -8,7 +8,7 @@ require_once 'Classes/Facture.php';
 use Classes\Facture;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $CompteurID = $_SESSION['compteurID'];
+    $ClientsID = $_SESSION['ClientsID'];
     $DateFacture = $_POST['factureMonth'];
     $Consomation = $_POST['record-number'];
     $Default = $_POST['default-number'];
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Create a new instance of the Facture class
-    $facture = new Facture($FactureID, $CompteurID, $DateFacture, ($Consomation-$Default), $DateLimite, $Statut, null, $DateCreation, $CreatedBy, $Image);
+    $facture = new Facture($FactureID, $ClientsID, $DateFacture, ($Consomation-$Default), $DateLimite, $Statut, null, $DateCreation, $CreatedBy, $Image);
 
     // Update the facture in the database
     $facture->updateFacture(($Consomation-$Default), $Statut, $Image,$FactureID);

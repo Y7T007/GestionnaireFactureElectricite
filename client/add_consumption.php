@@ -1,10 +1,10 @@
 <?php
 
-require_once '../Classes/Compteur.php';
+require_once '../Classes/Clients.php';
 require_once '../Classes/Facture.php';
 require_once '../Classes/Annual_Consumption.php';
 
-use Classes\Compteur;
+use Classes\Clients;
 use Classes\Facture;
 use Classes\Annual_Consumption;
 use Classes\Reclamation;
@@ -13,12 +13,12 @@ use Classes\DB_connection;
 
 
 // Get the data from the form
-//if (isset($_POST['CompteurID']) && isset($_POST['Year']) && isset($_POST['Facture']))
+//if (isset($_POST['ClientsID']) && isset($_POST['Year']) && isset($_POST['Facture']))
 //{
-//    $CompteurID = $_POST['CompteurID'];
+//    $ClientsID = $_POST['ClientsID'];
 //    $ClientName = $_POST['ClientName'];
 //    $Facture = $_POST['Facture'];
-//    $consumption = new Compteur($CompteurID, $ClientName, $Facture);
+//    $consumption = new Clients($ClientsID, $ClientName, $Facture);
 //}
 
 // Create a new instance of the Facture class
@@ -47,8 +47,8 @@ use Classes\DB_connection;
 
     <form action="add_consumption.php" method="post">
         <div class="input-group">
-            <label>CompteurID</label>
-            <input type="text" name="CompteurID">
+            <label>ClientsID</label>
+            <input type="text" name="ClientsID">
         </div>
         <div class="input-group">
             <label>Year</label>

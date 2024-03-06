@@ -1,15 +1,15 @@
 <?php
-require_once 'Classes/Compteur.php';
-use Classes\Compteur;
+require_once 'Classes/Clients.php';
+use Classes\Clients;
 
-// Get the CompteurID from the GET parameters
-$CompteurID = $_GET['CompteurID'];
+// Get the ClientsID from the GET parameters
+$ClientsID = $_GET['ClientsID'];
 
-// Create a new Compteur object
-$compteur = new Compteur($CompteurID, null, null, null, null);
+// Create a new Clients object
+$Clients = new Clients($ClientsID, null, null, null, null);
 
 // Get the client's current information
-$client = $compteur->getCompteur($CompteurID);
+$client = $Clients->getClients($ClientsID);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the updated information from the POST parameters
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ElectricalDashNumber = $_POST['ElectricalDashNumber'];
 
     // Update the client's information
-    $compteur->updateCompteur($ClientName, $Address, $dateNaissance, $ElectricalDashNumber);
+    $Clients->updateClients($ClientName, $Address, $dateNaissance, $ElectricalDashNumber);
 
     // Redirect to the clients page
     header('Location: Admin_clients.php');

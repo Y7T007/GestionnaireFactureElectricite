@@ -6,7 +6,7 @@ session_start();
 
 // Fetch the factures for the current logged in user
 $facture = new Facture( null, null, null, null, null, null, null, null, null);
-$userFactures = $facture->getUserFactures($_SESSION['compteurID']);
+$userFactures = $facture->getUserFactures($_SESSION['ClientsID']);
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
@@ -216,7 +216,7 @@ $userFactures = $facture->getUserFactures($_SESSION['compteurID']);
                                                     } else {
                                                         echo '<form action="add-consumption.php" method="post">';
                                                         echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
-                                                        echo '<input type="hidden" name="CompteurID" value="' . $facture['CompteurID'] . '">';
+                                                        echo '<input type="hidden" name="ClientsID" value="' . $facture['ClientsID'] . '">';
                                                         echo '<input type="hidden" name="Consomation" value="' . $facture['Consomation'] . '">';
                                                         echo '<input type="submit" class="btn btn-warning" value="Verify Now">';
                                                         echo '</form>';

@@ -162,25 +162,25 @@
                                     </thead>
                                     <tbody>
                                     <?php
-                                    require_once 'Classes/Compteur.php';
-                                    use Classes\Compteur;
+                                    require_once 'Classes/Clients.php';
+                                    use Classes\Clients;
 
-                                    // Create a new Compteur object
-                                    $compteur = new Compteur(null, null, null, null, null);
+                                    // Create a new Clients object
+                                    $Clients = new Clients(null, null, null, null, null);
 
                                     // Get all clients
-                                    $clients = $compteur->getAllCompteurs();
+                                    $clients = $Clients->getAllClientss();
 
                                     // Loop through the clients and display each one in a row of the table
                                     foreach ($clients as $client) {
                                         echo "<tr>";
-                                        echo "<td>{$client['CompteurID']}</td>";
+                                        echo "<td>{$client['ClientsID']}</td>";
                                         echo "<td>{$client['ClientName']}</td>";
                                         echo "<td>{$client['Address']}</td>";
                                         echo "<td>{$client['dateNaissance']}</td>";
                                         echo "<td>{$client['ElectricalDashNumber']}</td>";
-                                        echo "<td><button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#updateModal{$client['CompteurID']}'>Update</button></td>";
-                                        echo "<td><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#deleteModal{$client['CompteurID']}'>Delete</button></td>";
+                                        echo "<td><button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#updateModal{$client['ClientsID']}'>Update</button></td>";
+                                        echo "<td><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#deleteModal{$client['ClientsID']}'>Delete</button></td>";
                                         echo "</tr>";
                                     }
                                     ?>
@@ -222,16 +222,16 @@
                                     </div>
                                     <!-- Update Client Modal -->
                                     <?php foreach ($clients as $client): ?>
-                                        <div class="modal fade" id="updateModal<?php echo $client['CompteurID']; ?>" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="updateModal<?php echo $client['ClientsID']; ?>" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="updateModalLabel">Update Client</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <form action="Admin_update_client.php?CompteurID=<?php echo $client['CompteurID']; ?>" method="post">
+                                                    <form action="Admin_update_client.php?ClientsID=<?php echo $client['ClientsID']; ?>" method="post">
                                                         <div class="modal-body">
-                                                            <input type="hidden" name="CompteurID" value="<?php echo $client['CompteurID']; ?>">
+                                                            <input type="hidden" name="ClientsID" value="<?php echo $client['ClientsID']; ?>">
                                                             <div class="mb-3">
                                                                 <label class="form-label">Name</label>
                                                                 <input type="text" class="form-control" name="ClientName" value="<?php echo $client['ClientName']; ?>">
@@ -259,7 +259,7 @@
                                         </div>
                                     <?php endforeach; ?>
                                     <?php foreach ($clients as $client): ?>
-                                        <div class="modal fade" id="deleteModal<?php echo $client['CompteurID']; ?>" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="deleteModal<?php echo $client['ClientsID']; ?>" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -271,7 +271,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <a href="Admin_delete_client.php?CompteurID=<?php echo $client['CompteurID']; ?>" class="btn btn-danger">Delete</a>
+                                                        <a href="Admin_delete_client.php?ClientsID=<?php echo $client['ClientsID']; ?>" class="btn btn-danger">Delete</a>
                                                     </div>
                                                 </div>
                                             </div>

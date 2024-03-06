@@ -6,7 +6,7 @@ class Reclamation
 {
 
     public $ReclamationID;
-    public $CompteurID;
+    public $ClientsID;
     public $Type_reclamation;
     public $DateReclamation;
     public $Content_reclamation;
@@ -15,10 +15,10 @@ class Reclamation
     public $Reponse_reclamation;
     private $pdo;
 
-    public function __construct($ReclamationID, $CompteurID, $Type_reclamation, $DateReclamation, $Content_reclamation, $Statut, $DateCreation)
+    public function __construct($ReclamationID, $ClientsID, $Type_reclamation, $DateReclamation, $Content_reclamation, $Statut, $DateCreation)
     {
         $this->ReclamationID = $ReclamationID;
-        $this->CompteurID = $CompteurID;
+        $this->ClientsID = $ClientsID;
         $this->Type_reclamation = $Type_reclamation;
         $this->DateReclamation = $DateReclamation;
         $this->Content_reclamation = $Content_reclamation;
@@ -33,9 +33,9 @@ class Reclamation
         return $this->ReclamationID;
     }
 
-    public function getCompteurID()
+    public function getClientsID()
     {
-        return $this->CompteurID;
+        return $this->ClientsID;
     }
 
     public function getType_reclamation()
@@ -75,9 +75,9 @@ class Reclamation
 
     public function addReclamation()
     {
-        $sql = "INSERT INTO `Reclamation` (`CompteurID`, `Type_reclamation`, `DateReclamation`, `Content_reclamation`, `Statut`, `DateCreation`) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `Reclamation` (`ClientsID`, `Type_reclamation`, `DateReclamation`, `Content_reclamation`, `Statut`, `DateCreation`) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->CompteurID, $this->Type_reclamation, $this->DateReclamation, $this->Content_reclamation, $this->Statut, $this->DateCreation]);
+        $stmt->execute([$this->ClientsID, $this->Type_reclamation, $this->DateReclamation, $this->Content_reclamation, $this->Statut, $this->DateCreation]);
     }
 
     public function getReclamation($reclamationID)
@@ -131,18 +131,18 @@ class Reclamation
         // For example, you might want to send an email, in which case you'd use the PHP mail() function.
     }
 
-    public function getPendingReclamations($compteurID)
+    public function getPendingReclamations($ClientsID)
     {
-        $sql = "SELECT COUNT(*) as pendingReclamations FROM `Reclamation` WHERE `CompteurID` = ? AND `Statut` = 'Pending'";
+        $sql = "SELECT COUNT(*) as pendingReclamations FROM `Reclamation` WHERE `ClientsID` = ? AND `Statut` = 'Pending'";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurID]);
+        $stmt->execute([$ClientsID]);
         return $stmt->fetch()['pendingReclamations'];
     }
-    public function getUserReclamations($compteurID)
+    public function getUserReclamations($ClientsID)
     {
-        $sql = "SELECT * FROM `Reclamation` WHERE `CompteurID` = ?";
+        $sql = "SELECT * FROM `Reclamation` WHERE `ClientsID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurID]);
+        $stmt->execute([$ClientsID]);
         return $stmt->fetchAll();
     }
 }

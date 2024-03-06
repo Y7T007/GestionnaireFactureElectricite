@@ -1,9 +1,9 @@
 <?php
 require_once 'vendor/autoload.php';
 require_once 'Classes/Facture.php';
-require_once 'Classes/Compteur.php'; // Include the Compteur class
+require_once 'Classes/Clients.php'; // Include the Clients class
 use Classes\Facture;
-use Classes\Compteur; // Use the Compteur class
+use Classes\Clients; // Use the Clients class
 
 // Create a new Facture object
 $facture = new Facture(null, null, null, null, null, null, null, null, null);
@@ -11,8 +11,8 @@ $facture = new Facture(null, null, null, null, null, null, null, null, null);
 // Get all the factures
 $factures = $facture->getAllFactures();
 
-// Create a new Compteur object
-$compteur = new Compteur(null, null, null, null, null);
+// Create a new Clients object
+$Clients = new Clients(null, null, null, null, null);
 
 // Rest of the PHP code...
 ?>
@@ -170,7 +170,7 @@ $compteur = new Compteur(null, null, null, null, null);
                                     <div class="modal-body">
                                         <!-- Loop through the violating clients and display their data -->
                                         <?php foreach ($_SESSION['violating_clients'] as $client): ?>
-                                            <p style="color: red;">ID_COMPTEUR: <?php echo $client[0]; ?>, CONSUMPTION: <?php echo $client[1]; ?>, YEAR: <?php echo $client[2]; ?>, CREATIONDATE: <?php echo $client[3]; ?></p>
+                                            <p style="color: red;">ID_Clients: <?php echo $client[0]; ?>, CONSUMPTION: <?php echo $client[1]; ?>, YEAR: <?php echo $client[2]; ?>, CREATIONDATE: <?php echo $client[3]; ?></p>
                                         <?php endforeach; ?>
                                     </div>
                                     <div class="modal-footer">
@@ -204,7 +204,7 @@ $compteur = new Compteur(null, null, null, null, null);
                                     <thead>
                                     <tr>
                                         <th>Facture ID</th>
-                                        <th>Compteur ID</th>
+                                        <th>Clients ID</th>
                                         <th>Date Facture</th>
                                         <th>Consomation</th>
                                         <th>Status</th>
@@ -215,7 +215,7 @@ $compteur = new Compteur(null, null, null, null, null);
                                     <?php foreach ($factures as $facture): ?>
                                         <tr>
                                             <td><?php echo $facture['FactureID']; ?></td>
-                                            <td><?php echo $facture['CompteurID']; ?></td>
+                                            <td><?php echo $facture['ClientsID']; ?></td>
                                             <td><?php echo $facture['DateFacture']; ?></td>
                                             <td><?php echo $facture['Consomation']; ?></td>
                                             <td>
@@ -245,8 +245,8 @@ $compteur = new Compteur(null, null, null, null, null);
 
                                 <?php foreach ($factures as $facture): ?>
                                     <?php
-                                    // Get the Compteur data for the current Facture
-                                    $compteurData = $compteur->getCompteur($facture['CompteurID']);
+                                    // Get the Clients data for the current Facture
+                                    $ClientsData = $Clients->getClients($facture['ClientsID']);
                                     ?>
                                     <div class="modal fade" id="factureModal<?php echo $facture['FactureID']; ?>" tabindex="-1" aria-labelledby="factureModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -257,10 +257,10 @@ $compteur = new Compteur(null, null, null, null, null);
                                                 </div>
                                                 <div class="modal-body">
                                                     <p>Facture ID: <?php echo $facture['FactureID']; ?></p>
-                                                    <p>Compteur ID: <?php echo $facture['CompteurID']; ?></p>
-                                                    <p>Client Name: <?php echo $compteurData['ClientName']; ?></p> <!-- Display the ClientName -->
-                                                    <p>Address: <?php echo $compteurData['Address']; ?></p> <!-- Display the Address -->
-                                                   <strong> <p>Last counting number: <?php echo $compteurData['ElectricalDashNumber']; ?></p></strong> <!-- Display the ElectricalDashNumber -->
+                                                    <p>Clients ID: <?php echo $facture['ClientsID']; ?></p>
+                                                    <p>Client Name: <?php echo $ClientsData['ClientName']; ?></p> <!-- Display the ClientName -->
+                                                    <p>Address: <?php echo $ClientsData['Address']; ?></p> <!-- Display the Address -->
+                                                   <strong> <p>Last counting number: <?php echo $ClientsData['ElectricalDashNumber']; ?></p></strong> <!-- Display the ElectricalDashNumber -->
                                                     <strong><p>Consomation: <?php echo $facture['Consomation']; ?></p></strong>
                                                     <p>Date Facture: <?php echo $facture['DateFacture']; ?></p>
                                                     <p>Status: <?php  if ($facture['Statut'] == 'NV') {

@@ -1,6 +1,6 @@
 <?php
-require_once 'Classes/Compteur.php';
-use Classes\Compteur;
+require_once 'Classes/Clients.php';
+use Classes\Clients;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the new client's information from the POST parameters
@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dateNaissance = $_POST['dateNaissance'];
     $ElectricalDashNumber = $_POST['ElectricalDashNumber'];
 
-    // Create a new Compteur object
-    $compteur = new Compteur(null, $ClientName, $Address, $dateNaissance, $ElectricalDashNumber);
+    // Create a new Clients object
+    $Clients = new Clients(null, $ClientName, $Address, $dateNaissance, $ElectricalDashNumber);
 
     // Add the new client
-    $compteur->addCompteur();
+    $Clients->addClients();
 
     // Redirect to the clients page
     header('Location: Admin_clients.php');

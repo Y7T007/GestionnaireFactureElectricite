@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $fID= $_GET['FactureID'];
     // Fetch the facture using the FactureID passed in the GET request
-    $facture = new Facture($fID, $_SESSION['compteurID'], null, null, null, null, null, null, null);
+    $facture = new Facture($fID, $_SESSION['ClientsID'], null, null, null, null, null, null, null);
     // Update the status of the facture to "paid"
     $facture->payFacture($fID);
     echo 'Facture paid successfully';

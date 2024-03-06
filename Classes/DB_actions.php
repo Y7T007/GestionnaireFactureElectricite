@@ -25,7 +25,7 @@ class DB_Actions
     {
         $collection = $this->db->selectCollection('GestFactureElectricite.annualConsumption');
         $document = [
-            'CompteurID' => $annualConsumption->getCompteurID(),
+            'ClientsID' => $annualConsumption->getClientsID(),
             'Year' => $annualConsumption->getYear(),
             'Consumption' => $annualConsumption->getConsumption(),
             'DateCreation' => $annualConsumption->getDateCreation()
@@ -33,10 +33,10 @@ class DB_Actions
         $collection->insertOne($document);
     }
 
-    public function getAnnualConsumption($compteurID, $year)
+    public function getAnnualConsumption($ClientsID, $year)
     {
         $collection = $this->db->selectCollection('annualConsumption');
-        $document = $collection->findOne(['CompteurID' => $compteurID, 'Year' => $year]);
+        $document = $collection->findOne(['ClientsID' => $ClientsID, 'Year' => $year]);
         return $document;
     }
 
@@ -53,7 +53,7 @@ class DB_Actions
         $collection = $this->db->selectCollection('reclamations');
         $document = [
             'ReclamationID' => $reclamation->getReclamationID(),
-            'CompteurID' => $reclamation->getCompteurID(),
+            'ClientsID' => $reclamation->getClientsID(),
             'Type_reclamation' => $reclamation->getType_reclamation(),
             'DateReclamation' => $reclamation->getDateReclamation(),
             'Content_reclamation' => $reclamation->getContent_reclamation(),
@@ -84,42 +84,42 @@ class DB_Actions
         $collection->updateOne(['ReclamationID' => $reclamationID], ['$set' => ['Reponse_reclamation' => $response]]);
     }
 
-    // Compteur actions
-    public function addCompteur(Compteur $compteur)
+    // Clients actions
+    public function addClients(Clients $Clients)
     {
         $collection = $this->db->selectCollection('users');
         $document = [
-            'CompteurID' => $compteur->getCompteurID(),
-            'ClientName' => $compteur->getClientName(),
-            'Address' => $compteur->getAddress()
+            'ClientsID' => $Clients->getClientsID(),
+            'ClientName' => $Clients->getClientName(),
+            'Address' => $Clients->getAddress()
         ];
         $collection->insertOne($document);
     }
 
-    public function deleteCompteur($compteurID)
+    public function deleteClients($ClientsID)
     {
         $collection = $this->db->selectCollection('users');
-        $collection->deleteOne(['CompteurID' => $compteurID]);
+        $collection->deleteOne(['ClientsID' => $ClientsID]);
     }
 
-    public function editCompteur(Compteur $compteur)
+    public function editClients(Clients $Clients)
     {
         $collection = $this->db->selectCollection('users');
         $document = [
-            'ClientName' => $compteur->getClientName(),
-            'Address' => $compteur->getAddress()
+            'ClientName' => $Clients->getClientName(),
+            'Address' => $Clients->getAddress()
         ];
-        $collection->updateOne(['CompteurID' => $compteur->getCompteurID()], ['$set' => $document]);
+        $collection->updateOne(['ClientsID' => $Clients->getClientsID()], ['$set' => $document]);
     }
 
-    public function getCompteur($compteurID)
+    public function getClients($ClientsID)
     {
         $collection = $this->db->selectCollection('users');
-        $document = $collection->findOne(['CompteurID' => $compteurID]);
+        $document = $collection->findOne(['ClientsID' => $ClientsID]);
         return $document;
     }
 
-    public function getAllCompteurs()
+    public function getAllClientss()
     {
         $collection = $this->db->selectCollection('users');
         $documents = $collection->find();
@@ -132,7 +132,7 @@ class DB_Actions
         $collection = $this->db->selectCollection('factures');
         $document = [
             'FactureID' => $facture->getFactureID(),
-            'CompteurID' => $facture->getCompteurID(),
+            'ClientsID' => $facture->getClientsID(),
             'DateFacture' => $facture->getDateFacture(),
             'Consomation' => $facture->getConsomation(),
             'DateLimite' => $facture->getDateLimite(),

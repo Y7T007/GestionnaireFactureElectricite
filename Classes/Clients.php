@@ -5,9 +5,9 @@ namespace Classes;
 use Classes\DB_Connection;
 require_once 'vendor/autoload.php';
 
-class Compteur
+class Clients
 {
-    public $compteurId;
+    public $ClientsId;
     public $clientName;
     public $address;
     public $clientBirthDate;
@@ -15,9 +15,9 @@ class Compteur
 
     private $pdo;
 
-    public function __construct($compteurId, $clientName, $address, $clientBirthDate, $electricalDashNumber)
+    public function __construct($ClientsId, $clientName, $address, $clientBirthDate, $electricalDashNumber)
     {
-        $this->compteurId = $compteurId;
+        $this->ClientsId = $ClientsId;
         $this->clientName = $clientName;
         $this->address = $address;
         $this->clientBirthDate = $clientBirthDate;
@@ -26,50 +26,50 @@ class Compteur
         $this->pdo = $DB_connection->getPDO();
     }
 
-    public function addCompteur()
+    public function addClients()
     {
-        $sql = "INSERT INTO `Compteur` (`ClientName`, `Address`, `dateNaissance`, `ElectricalDashNumber`) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO `Clients` (`ClientName`, `Address`, `dateNaissance`, `ElectricalDashNumber`) VALUES (?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$this->clientName, $this->address, $this->clientBirthDate, $this->electricalDashNumber]);
     }
 
-    public function getCompteur($compteurId)
+    public function getClients($ClientsId)
     {
-        $sql = "SELECT * FROM `Compteur` WHERE `CompteurID` = ?";
+        $sql = "SELECT * FROM `Clients` WHERE `ClientsID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId]);
+        $stmt->execute([$ClientsId]);
         $result = $stmt->fetch();
         $this->electricalDashNumber = $result['ElectricalDashNumber'];
         return $result;
     }
 
-    public function getAllCompteurs()
+    public function getAllClientss()
     {
-        $sql = "SELECT * FROM `Compteur`";
+        $sql = "SELECT * FROM `Clients`";
         $stmt = $this->pdo->query($sql);
         $results = $stmt->fetchAll();
         return $results;
     }
 
-    public function updateCompteur($electricalDashNumber)
+    public function updateClients($electricalDashNumber)
     {
-        $sql = "UPDATE `Compteur` SET `ElectricalDashNumber` = ? WHERE `CompteurID` = ?";
+        $sql = "UPDATE `Clients` SET `ElectricalDashNumber` = ? WHERE `ClientsID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$electricalDashNumber, $this->compteurId]);
+        $stmt->execute([$electricalDashNumber, $this->ClientsId]);
     }
 
-    public function deleteCompteur()
+    public function deleteClients()
     {
-        $sql = "DELETE FROM `Compteur` WHERE `CompteurID` = ?";
+        $sql = "DELETE FROM `Clients` WHERE `ClientsID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->compteurId]);
+        $stmt->execute([$this->ClientsId]);
     }
 
-    public function login($compteurId, $clientBirthDate)
+    public function login($ClientsId, $clientBirthDate)
     {
-        $sql = "SELECT * FROM `Compteur` WHERE `CompteurID` = ? AND `dateNaissance` = ?";
+        $sql = "SELECT * FROM `Clients` WHERE `ClientsID` = ? AND `dateNaissance` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurId, $clientBirthDate]);
+        $stmt->execute([$ClientsId, $clientBirthDate]);
         return $stmt->fetch() !== false;
     }
 }

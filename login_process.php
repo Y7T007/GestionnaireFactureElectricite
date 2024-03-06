@@ -1,24 +1,24 @@
 <?php
 
-use Classes\Compteur;
+use Classes\Clients;
 
 require_once 'vendor/autoload.php';
 session_start();
 
 
-$compteurID = $_POST['compteurID'];
+$ClientsID = $_POST['ClientsID'];
 $dateNaissance = $_POST['dateNaissance'];
 
-$compteur = new Compteur($compteurID, null, null, $dateNaissance,null);
+$Clients = new Clients($ClientsID, null, null, $dateNaissance,null);
 
-if ($compteur->login($compteurID, $dateNaissance)) {
+if ($Clients->login($ClientsID, $dateNaissance)) {
     $_SESSION['loggedin'] = true;
-    $_SESSION['compteurID'] = $compteurID;
+    $_SESSION['ClientsID'] = $ClientsID;
     header('Location: index.php');
     exit;
 } else {
     // login failed
-    $_SESSION['login_error'] = "Incorrect Compteur ID or Date of Birth.";
+    $_SESSION['login_error'] = "Incorrect Clients ID or Date of Birth.";
     header('Location: login.php');
     exit;
 }

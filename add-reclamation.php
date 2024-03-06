@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // If the type of the reclamation is "Facture" and a factureId is provided
     if ($type === 'Facture' && $factureId !== null) {
         // Create a new Facture object
-        $facture = new Facture(null, $_SESSION['compteurID'], null, null, null, null, null, null, null);
+        $facture = new Facture(null, $_SESSION['ClientsID'], null, null, null, null, null, null, null);
         // Check if the factureId exists in the database
         if ($facture->getFacture($factureId) === false) {
             // Set an error message in a session variable
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dbConnection = new DB_Connection();
     $pdo = $dbConnection->getPDO();
 
-    $reclamation = new Reclamation(null, $_SESSION['compteurID'], $type, null, $content, $status, date('Y-m-d'));
+    $reclamation = new Reclamation(null, $_SESSION['ClientsID'], $type, null, $content, $status, date('Y-m-d'));
     $reclamation->addReclamation();
 
     // Redirect to a confirmation page or back to the form
