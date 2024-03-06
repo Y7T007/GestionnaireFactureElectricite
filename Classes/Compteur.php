@@ -7,38 +7,39 @@ require_once 'vendor/autoload.php';
 
 class Compteur
 {
-    public $CompteurID;
-    public $ClientName;
-    public $Address;
-    public $dateNaissance;
-    public $ElectricalDashNumber;
+    public $compteurId;
+    public $clientName;
+    public $address;
+    public $clientBirthDate;
+    public $electricalDashNumber;
 
     private $pdo;
 
-    public function __construct($CompteurID, $ClientName, $Address, $dateNaissance, $ElectricalDashNumber)
+    public function __construct($compteurId, $clientName, $address, $clientBirthDate, $electricalDashNumber)
     {
-        $this->CompteurID = $CompteurID;
-        $this->ClientName = $ClientName;
-        $this->Address = $Address;
-        $this->dateNaissance = $dateNaissance;
-        $this->ElectricalDashNumber = $ElectricalDashNumber;
+        $this->compteurId = $compteurId;
+        $this->clientName = $clientName;
+        $this->address = $address;
+        $this->clientBirthDate = $clientBirthDate;
+        $this->electricalDashNumber = $electricalDashNumber;
         $DB_connection = new DB_connection();
         $this->pdo = $DB_connection->getPDO();
     }
+
     public function addCompteur()
     {
         $sql = "INSERT INTO `Compteur` (`ClientName`, `Address`, `dateNaissance`, `ElectricalDashNumber`) VALUES (?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->client->ClientName, $this->client->Address, $this->client->dateNaissance, $this->ElectricalDashNumber]);
+        $stmt->execute([$this->clientName, $this->address, $this->clientBirthDate, $this->electricalDashNumber]);
     }
 
-    public function getCompteur($compteurID)
+    public function getCompteur($compteurId)
     {
         $sql = "SELECT * FROM `Compteur` WHERE `CompteurID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$compteurID]);
+        $stmt->execute([$compteurId]);
         $result = $stmt->fetch();
-        $this->ElectricalDashNumber = $result['ElectricalDashNumber'];
+        $this->electricalDashNumber = $result['ElectricalDashNumber'];
         return $result;
     }
 
@@ -50,25 +51,25 @@ class Compteur
         return $results;
     }
 
-    public function updateCompteur($ElectricalDashNumber)
+    public function updateCompteur($electricalDashNumber)
     {
         $sql = "UPDATE `Compteur` SET `ElectricalDashNumber` = ? WHERE `CompteurID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$ElectricalDashNumber, $this->CompteurID]);
+        $stmt->execute([$electricalDashNumber, $this->compteurId]);
     }
 
     public function deleteCompteur()
     {
         $sql = "DELETE FROM `Compteur` WHERE `CompteurID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->CompteurID]);
+        $stmt->execute([$this->compteurId]);
     }
 
-    public function login($CompteurID, $dateNaissance)
+    public function login($compteurId, $clientBirthDate)
     {
         $sql = "SELECT * FROM `Compteur` WHERE `CompteurID` = ? AND `dateNaissance` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$CompteurID, $dateNaissance]);
+        $stmt->execute([$compteurId, $clientBirthDate]);
         return $stmt->fetch() !== false;
     }
 }
