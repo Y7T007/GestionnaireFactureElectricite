@@ -11,26 +11,25 @@ class Compteur
     public $ClientName;
     public $Address;
     public $dateNaissance;
-    public $ElectricalDashNumber; // New attribute
+    public $ElectricalDashNumber;
 
     private $pdo;
 
-    public function __construct($CompteurID, $ClientName, $Address, $dateNaissance, $ElectricalDashNumber) // Updated constructor
+    public function __construct($CompteurID, $ClientName, $Address, $dateNaissance, $ElectricalDashNumber)
     {
         $this->CompteurID = $CompteurID;
         $this->ClientName = $ClientName;
         $this->Address = $Address;
         $this->dateNaissance = $dateNaissance;
-        $this->ElectricalDashNumber = $ElectricalDashNumber; // Assign the new attribute
+        $this->ElectricalDashNumber = $ElectricalDashNumber;
         $DB_connection = new DB_connection();
         $this->pdo = $DB_connection->getPDO();
     }
-
     public function addCompteur()
     {
-        $sql = "INSERT INTO `Compteur` (`ClientName`, `Address`, `dateNaissance`, `ElectricalDashNumber`) VALUES (?, ?, ?, ?)"; // Updated SQL query
+        $sql = "INSERT INTO `Compteur` (`ClientName`, `Address`, `dateNaissance`, `ElectricalDashNumber`) VALUES (?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$this->ClientName, $this->Address, $this->dateNaissance, $this->ElectricalDashNumber]); // Updated execute method
+        $stmt->execute([$this->client->ClientName, $this->client->Address, $this->client->dateNaissance, $this->ElectricalDashNumber]);
     }
 
     public function getCompteur($compteurID)
@@ -39,7 +38,7 @@ class Compteur
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$compteurID]);
         $result = $stmt->fetch();
-        $this->ElectricalDashNumber = $result['ElectricalDashNumber']; // Fetch the new attribute
+        $this->ElectricalDashNumber = $result['ElectricalDashNumber'];
         return $result;
     }
 
@@ -48,17 +47,14 @@ class Compteur
         $sql = "SELECT * FROM `Compteur`";
         $stmt = $this->pdo->query($sql);
         $results = $stmt->fetchAll();
-        foreach ($results as $result) {
-            $result['ElectricalDashNumber'] = $result['ElectricalDashNumber']; // Fetch the new attribute
-        }
         return $results;
     }
 
-    public function updateCompteur($ClientName, $Address, $dateNaissance, $ElectricalDashNumber) // Updated method
+    public function updateCompteur($ElectricalDashNumber)
     {
-        $sql = "UPDATE `Compteur` SET `ClientName` = ?, `Address` = ?, `dateNaissance` = ?, `ElectricalDashNumber` = ? WHERE `CompteurID` = ?"; // Updated SQL query
+        $sql = "UPDATE `Compteur` SET `ElectricalDashNumber` = ? WHERE `CompteurID` = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$ClientName, $Address, $dateNaissance, $ElectricalDashNumber, $this->CompteurID]); // Updated execute method
+        $stmt->execute([$ElectricalDashNumber, $this->CompteurID]);
     }
 
     public function deleteCompteur()
