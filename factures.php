@@ -218,7 +218,7 @@ $userFactures = $facture->getUserFactures($_SESSION['ClientsID']);
                                                         echo '<input type="hidden" name="FactureID" value="' . $facture['FactureID'] . '">';
                                                         echo '<input type="hidden" name="ClientsID" value="' . $facture['ClientsID'] . '">';
                                                         echo '<input type="hidden" name="Consomation" value="' . $facture['Consomation'] . '">';
-                                                        echo '<input type="submit" class="btn btn-warning" value="Verify Now">';
+                                                        echo '<input type="submit" class="btn btn-primary" value="Add this Facture">';
                                                         echo '</form>';
                                                     }
                                                 }else if ($facture['Statut'] === 'NV'){

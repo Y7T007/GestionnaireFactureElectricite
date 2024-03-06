@@ -226,6 +226,8 @@ $Clients = new Clients(null, null, null, null, null);
                                                     echo '<button type="button" class="btn btn-success" disabled>Confirmed</button>';
                                                 } elseif ($facture['Statut'] == 'Refused') {
                                                     echo '<button type="button" class="btn btn-warning" disabled>Refused</button>';
+                                                }  elseif ($facture['Statut'] == 'paid') {
+                                                    echo '<button type="button" class="btn btn-success" disabled>Paid</button>';
                                                 } else{
                                                     echo '<button type="button" class="btn btn-dark" disabled>'.$facture['Statut'].'</button>';
                                                 }
