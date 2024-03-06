@@ -80,21 +80,21 @@ $unpaidFactures = $facture->getUnpaidFactures($_SESSION['ClientsID']);
 
                                         <div class="mb-3"><label class="form-label">Enter this month record on the dash</label>
                                             <input class="form-control form-control-user" type="number" id="monthlyRecord" name="record-number" placeholder="This month record " onfocusout="validateInput()">
+                                            <input class="isAnomalie" name="isAnomalie" type="hidden">
                                             <script>
                                                 function validateInput() {
                                                     var electricalDashNumber = <?php echo $ElectricalDashNumber; ?>;
                                                     var submitButton = document.querySelector('.btn-user');
+                                                    var isAnomalie = document.querySelector('.isAnomalie');
 
                                                     var monthlyRecord = document.getElementById('monthlyRecord').value;
 
                                                     if (monthlyRecord < electricalDashNumber) {
-                                                        submitButton.disabled = true;
-                                                        alert('The entered value cannot be lower than the Electrical Dash Number.');
-                                                    }else if (electricalDashNumber<= monthlyRecord && monthlyRecord <= (electricalDashNumber+10) ) {
-                                                        submitButton.disabled = true;
-                                                        alert('Please verify again the number, the difference between the last month and this month is less than 10KW');
-                                                    } else {
                                                         submitButton.disabled = false;
+                                                        isAnomalie.value = true;
+                                                        alert('The entered value cannot be lower than the Electrical Dash Number.');
+                                                    } else {
+                                                        isAnomalie.value = false;
                                                     }
                                                 }
                                             </script>

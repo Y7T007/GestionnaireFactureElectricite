@@ -5,6 +5,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'Classes/Facture.php';
+
+use Classes\Clients;
 use Classes\Facture;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,7 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $Consomation = $_POST['record-number'];
     $Default = $_POST['default-number'];
     $DateLimite = date('Y-m-d', strtotime('+1 month'));
-    $Statut = 'NV';
+    if ($_POST['isAnomalie'] == 'true'){
+        $Statut = 'NV';
+    } else {
+        $Statut = 'Confirmed';
+        $c1 = new Clients($ClientsID, null, null, null, null);
+        $c1->updateClients($Consomation);
+    }
     $DateCreation = date('Y-m-d');
     $CreatedBy = 'Y7T007';
 
@@ -40,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($filetype, $allowed)) {
             // Check whether file exists before uploading it
             if (file_exists("upload/" . $filename)) {
+                $filename = pathinfo($filename, PATHINFO_FILENAME) . '_' . time() . '.' . $ext;
                 echo $filename . " is already exists.";
             } else {
                 move_uploaded_file($_FILES["image"]["tmp_name"], "upload/" . $filename);
