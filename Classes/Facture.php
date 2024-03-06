@@ -127,6 +127,12 @@ class Facture
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$status, $factureId]);
     }
+    public function updateFactureConsumption($factureId, $consomation)
+    {
+        $sql = "UPDATE `Facture` SET `Consomation` = ?, `Statut`= ?  WHERE `FactureID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$consomation,"Confirmed" , $factureId]);
+    }
 
     public function getUserFactures($ClientsId)
     {

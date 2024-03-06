@@ -256,34 +256,41 @@ $Clients = new Clients(null, null, null, null, null);
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>Facture ID: <?php echo $facture['FactureID']; ?></p>
-                                                    <p>Clients ID: <?php echo $facture['ClientsID']; ?></p>
-                                                    <p>Client Name: <?php echo $ClientsData['ClientName']; ?></p> <!-- Display the ClientName -->
-                                                    <p>Address: <?php echo $ClientsData['Address']; ?></p> <!-- Display the Address -->
-                                                   <strong> <p>Last counting number: <?php echo $ClientsData['ElectricalDashNumber']; ?></p></strong> <!-- Display the ElectricalDashNumber -->
-                                                    <strong><p>Consomation: <?php echo $facture['Consomation']; ?></p></strong>
-                                                    <p>Date Facture: <?php echo $facture['DateFacture']; ?></p>
-                                                    <p>Status: <?php  if ($facture['Statut'] == 'NV') {
-                                                            echo 'Not Confirmed';
-                                                        } else {
-                                                            echo $facture['Statut'];
-                                                        } ?>
-                                                    </p>
+                                                    <br> Facture ID:<div class="editable" id="factureID<?php echo $facture['FactureID']; ?>"><?php echo $facture['FactureID']; ?></div>
+                                                    <br> Clients ID:<div class="editable" id="clientsID<?php echo $facture['FactureID']; ?>"><?php echo $facture['ClientsID']; ?></div>
+                                                    <br> Client Name:<div class="editable" id="clientName<?php echo $facture['FactureID']; ?>"><?php echo $ClientsData['ClientName']; ?></div>
+                                                    <br> Address: <div class="editable" id="address<?php echo $facture['FactureID']; ?>"><?php echo $ClientsData['Address']; ?></div>
+                                                    <br> Last counting number :<div class="editable" id="lastCountingNumber<?php echo $facture['FactureID']; ?>"> <?php echo $ClientsData['ElectricalDashNumber']; ?></div>
+                                                    <br> Consomation :<div class="editable" id="consomation<?php echo $facture['FactureID']; ?>"><?php echo $facture['Consomation']; ?></div>
+                                                    <br> Date Facture:<div class="editable" id="dateFacture<?php echo $facture['FactureID']; ?>"> <?php echo $facture['DateFacture']; ?></div>
+                                                    <br> Status: <div class="editable" id="status<?php echo $facture['FactureID']; ?>"><?php echo $facture['Statut']; ?></div>
                                                     <div class="container">
                                                         <a href="<?php echo $facture['Image']; ?>" data-lightbox="factureImage">
                                                             <img src="<?php echo $facture['Image']; ?>" style="width: 100%;border-radius: 15px" alt="Facture Image">
                                                         </a>
-<!--                                                        <img src="--><?php //echo $facture['Image']; ?><!--" style="width: 100%;border-radius: 15px" alt="Facture Image">-->
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-success" onclick="updateFactureStatus(<?php echo $facture['FactureID']; ?>, 'Confirmed')">Confirm</button>
                                                     <button type="button" class="btn btn-danger" onclick="updateFactureStatus(<?php echo $facture['FactureID']; ?>, 'Refused')">Refuse</button>
+                                                    <button type="button" class="btn btn-primary" id="editButton<?php echo $facture['FactureID']; ?>" onclick="editFacture(<?php echo $facture['FactureID']; ?>)">Edit</button>
                                                 </div>
+                                                <!-- Hidden form -->
+                                                <form id="hiddenForm<?php echo $facture['FactureID']; ?>" method="POST" action="Admin_update_facture.php" style="display: none;">
+                                                    <input type="hidden" name="factureID" value="<?php echo $facture['FactureID']; ?>">
+                                                    <input type="hidden" name="clientsID">
+                                                    <input type="hidden" name="clientName">
+                                                    <input type="hidden" name="address">
+                                                    <input type="hidden" name="lastCountingNumber">
+                                                    <input type="hidden" name="consomation">
+                                                    <input type="hidden" name="dateFacture">
+                                                    <input type="hidden" name="status">
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
+                                
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
                                     <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
@@ -312,9 +319,50 @@ $Clients = new Clients(null, null, null, null, null);
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
         <script>
+            function editFacture(factureID) {
+                var editButton = document.getElementById('editButton' + factureID);
+                var editableElements = document.querySelectorAll('.editable');
+
+                if (editButton.innerHTML === 'Edit') {
+                    editableElements.forEach(function(element) {
+                        var text = element.innerHTML;
+                        var id = element.id;
+                        var inputType = 'text';
+                        if (id.includes('consomation')) {
+                            inputType = 'number';
+                        } else if (id.includes('dateFacture')) {
+                            inputType = 'date';
+                        }
+                        element.innerHTML = '<input type="' + inputType + '" id="' + id + 'Input" value="' + text + '">';
+                    });
+                    editButton.innerHTML = 'Save';
+                } else {
+                    var data = {};
+                    editableElements.forEach(function(element) {
+                        var id = element.id.replace(factureID, '');
+                        var input = document.getElementById(element.id + 'Input');
+                        element.innerHTML = input.value;
+                        data[id] = input.value;
+                    });
+                    editButton.innerHTML = 'Edit';
+
+                    // Send an AJAX request to update the facture in the database
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'Admin_update_facture.php', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                            alert("Facture updated successfully.");
+                            location.reload(); // Reload the page to see the updated status
+                        }
+                    }
+                    xhr.send('factureID=' + factureID + '&data=' + JSON.stringify(data));
+                }
+            }
+
             function updateFactureStatus(factureID, status) {
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "update_facture_status.php", true);
+                xhr.open("POST", "Admin_update_facture.php", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function() {
                     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -323,6 +371,11 @@ $Clients = new Clients(null, null, null, null, null);
                     }
                 }
                 xhr.send("factureID=" + factureID + "&status=" + status);
+
+                // Send an AJAX request to update the facture in the database
+                xhr.open('POST', 'Admin_update_facture.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({factureID: factureID, data: this.data}));
             }
         </script>
         <!-- Modal -->
