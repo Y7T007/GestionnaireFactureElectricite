@@ -43,7 +43,12 @@ class Annual_Consumption
 
     public function addAnnualConsumption()
     {
-        // Implementation to add the current Annual_Consumption instance to the database
+        $db = new DB_Connection();
+        $pdo = $db->getPDO();
+
+        $sql = "INSERT INTO annual_consumption (ClientsID, Year, Consumption, DateCreation) VALUES (?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$this->ClientsID, $this->Year, $this->Consumption, $this->DateCreation]);
     }
 
     public function getAnnualConsumption()
@@ -51,9 +56,16 @@ class Annual_Consumption
         // Implementation to get a specific Annual_Consumption from the database
     }
 
-    public static function getAllAnnualConsumptions()
-    {
-        // Implementation to get all Annual_Consumptions from the database
-    }
+ public static function getAllAnnualConsumptions()
+{
+    $db = new DB_Connection();
+    $pdo = $db->getPDO();
+
+    $sql = "SELECT * FROM annual_consumption";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
 
 }

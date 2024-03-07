@@ -153,6 +153,56 @@ $Clients = new Clients(null, null, null, null, null);
                     <button type="button" class="btn btn-primary btn-sm d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#yearlyFacturationModal">
                         <i class="fas fa-plus fa-sm text-white-50" style="font-size: 13px;"></i>&nbsp;Yearly Facturation
                     </button>
+
+                    <!-- Add this button next to the "Add Yearly Consumption" button -->
+                    <button type="button" class="btn btn-primary btn-sm d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#viewYearlyConsumptionModal">
+                        <i class="fas fa-eye fa-sm text-white-50" style="font-size: 13px;"></i>&nbsp;View Yearly Consumption
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="viewYearlyConsumptionModal" tabindex="-1" aria-labelledby="viewYearlyConsumptionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewYearlyConsumptionModalLabel">Yearly Consumption</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table id="yearlyConsumptionTable" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Clients ID</th>
+                                            <th>Year</th>
+                                            <th>Consumption</th>
+                                            <th>Sum of Factures </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        // Fetch the data from the database
+                                        $annualConsumptions = \Classes\Annual_Consumption::getAllAnnualConsumptions();
+
+                                        // Loop through the data and create a table row for each record
+                                        foreach ($annualConsumptions as $consumption) {
+                                            echo "<tr>";
+                                            echo "<td>" . htmlspecialchars($consumption['ClientsID']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($consumption['Year']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($consumption['Consumption']) . "</td>";
+                                            echo "</tr>";
+                                        }
+                                        ?>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <!-- Check if the session variable is set -->
                     <?php if (isset($_SESSION['violating_clients'])): ?>
 
@@ -396,6 +446,20 @@ $Clients = new Clients(null, null, null, null, null);
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
+                        <!-- New table to display the imported data -->
+                        <table id="importedDataTable" class="table" style="display: none;">
+                            <thead>
+                            <tr>
+                                <th>Clients ID</th>
+                                <th>Year</th>
+                                <th>Consumption</th>
+                                <th>Date Creation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Rows will be added here dynamically -->
+                            </tbody>
+                        </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
