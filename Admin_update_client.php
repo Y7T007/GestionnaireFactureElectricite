@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ElectricalDashNumber = $_POST['ElectricalDashNumber'];
 
     // Update the client's information
-    $Clients->updateClients($ClientName, $Address, $dateNaissance, $ElectricalDashNumber);
+    $Clients->updateClientsAll($ClientName, $Address, $dateNaissance, $ElectricalDashNumber);
 
     // Redirect to the clients page
     header('Location: Admin_clients.php');

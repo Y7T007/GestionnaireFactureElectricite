@@ -58,6 +58,14 @@ class Clients
         $stmt->execute([$electricalDashNumber, $this->ClientsId]);
     }
 
+//    update all fields
+    public function updateClientsAll($clientName, $address, $clientBirthDate, $electricalDashNumber)
+    {
+        $sql = "UPDATE `Clients` SET `ClientName` = ?, `Address` = ?, `dateNaissance` = ?, `ElectricalDashNumber` = ? WHERE `ClientsID` = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$clientName, $address, $clientBirthDate, $electricalDashNumber, $this->ClientsId]);
+    }
+
     public function deleteClients()
     {
         $sql = "DELETE FROM `Clients` WHERE `ClientsID` = ?";

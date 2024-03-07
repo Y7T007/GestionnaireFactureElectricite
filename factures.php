@@ -209,6 +209,7 @@ $userFactures = $facture->getUserFactures($_SESSION['ClientsID']);
 
                                                 if($facture['Statut'] === 'paid'){
                                                     echo '<button class="btn btn-success" disabled>Paid</button>';
+                                                    echo '<a href="download_facture.php?invoice_id='.$facture['FactureID'].'" class="btn btn-primary">Download as PDF</a>';
                                                 }
                                                 else if ($facture['Statut'] === 'waiting'){
                                                     if (new DateTime() > new DateTime($facture['DateLimite'])) {
@@ -236,6 +237,7 @@ $userFactures = $facture->getUserFactures($_SESSION['ClientsID']);
                                                     echo '</form>';
                                                 }
                                                     ?>
+
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
